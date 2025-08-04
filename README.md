@@ -298,9 +298,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for technical guidelines.
 ```bibtex
 @software{darkoperator2025,
   title={DarkOperator Studio: Neural Operators for Ultra-Rare Dark Matter Detection},
-  author={Your Name and Collaborators},
+  author={Daniel Schmidt},
   year={2025},
-  url={https://github.com/yourusername/darkoperator-studio}
+  url={https://github.com/danieleschmidt/darkoperator-studio}
 }
 
 @article{cern-ai-physics2025,
