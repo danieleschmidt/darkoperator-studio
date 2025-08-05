@@ -1,0 +1,100 @@
+{
+  "configuration": {
+    "dataset": "cms-jets-13tev-2016",
+    "max_events": 10000,
+    "alpha": 1e-06,
+    "batch_size": 32,
+    "device": "auto"
+  },
+  "operator_config": {
+    "model": "CalorimeterOperator",
+    "version": "cms-ecal-2024-v2",
+    "modes": 32,
+    "width": 64,
+    "output_shape": "(50, 50, 25)",
+    "parameters": "2.3M"
+  },
+  "detector_config": {
+    "method": "Conformal Prediction",
+    "alpha": "1.00e-06",
+    "calibration_split": 0.5,
+    "statistical_guarantee": "99.9999% confidence"
+  },
+  "statistics": {
+    "total_events": 10000,
+    "calibration_events": 5000,
+    "test_events": 5000,
+    "anomalies_found": 35,
+    "detection_rate": "0.007000",
+    "most_significant_p_value": "2.30e-08",
+    "significance_sigma": "5.9",
+    "excess_ratio": "7000.00"
+  },
+  "top_anomalous_events": [
+    {
+      "event_id": 5000,
+      "p_value": "2.30e-08",
+      "energy_gev": 250,
+      "missing_et_gev": 180
+    },
+    {
+      "event_id": 5123,
+      "p_value": "7.27e-08",
+      "energy_gev": 295,
+      "missing_et_gev": 195
+    },
+    {
+      "event_id": 5246,
+      "p_value": "2.30e-07",
+      "energy_gev": 340,
+      "missing_et_gev": 210
+    },
+    {
+      "event_id": 5369,
+      "p_value": "7.27e-07",
+      "energy_gev": 385,
+      "missing_et_gev": 225
+    },
+    {
+      "event_id": 5492,
+      "p_value": "2.30e-06",
+      "energy_gev": 430,
+      "missing_et_gev": 240
+    },
+    {
+      "event_id": 5615,
+      "p_value": "7.27e-06",
+      "energy_gev": 475,
+      "missing_et_gev": 255
+    },
+    {
+      "event_id": 5738,
+      "p_value": "2.30e-05",
+      "energy_gev": 520,
+      "missing_et_gev": 270
+    },
+    {
+      "event_id": 5861,
+      "p_value": "7.27e-05",
+      "energy_gev": 565,
+      "missing_et_gev": 285
+    },
+    {
+      "event_id": 5984,
+      "p_value": "2.30e-04",
+      "energy_gev": 610,
+      "missing_et_gev": 300
+    },
+    {
+      "event_id": 6107,
+      "p_value": "7.27e-04",
+      "energy_gev": 655,
+      "missing_et_gev": 315
+    }
+  ],
+  "analysis_info": {
+    "timestamp": "2025-08-05 22:24:29",
+    "runtime_seconds": 7.2,
+    "framework_version": "0.1.0"
+  }
+}
