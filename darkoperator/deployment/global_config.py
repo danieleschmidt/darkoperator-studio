@@ -652,3 +652,561 @@ class GlobalConfiguration:
             },
             "validation_issues": self.validate_configuration()
         }
+    
+    def setup_disaster_recovery(self) -> None:
+        """Setup disaster recovery configuration."""
+        
+        for region_config in self.regions.values():
+            if region_config.backup_regions:
+                logger.info(f"Disaster recovery configured for {region_config.region.value}")
+                
+                # Ensure backup regions have compatible configuration
+                for backup_region in region_config.backup_regions:
+                    if backup_region in self.regions:
+                        backup_config = self.regions[backup_region]
+                        
+                        # Ensure backup region has similar capabilities
+                        if region_config.gpu_enabled and not backup_config.gpu_enabled:
+                            logger.warning(f"Backup region {backup_region.value} lacks GPU support")
+                        
+                        if region_config.quantum_simulation_optimized and not backup_config.quantum_simulation_optimized:
+                            logger.warning(f"Backup region {backup_region.value} not quantum optimized")
+    
+    def get_optimal_region_for_workload(self, requirements: Dict[str, Any]) -> Optional[Region]:
+        """Select optimal region based on workload requirements."""
+        
+        gpu_required = requirements.get('gpu_required', False)
+        high_memory = requirements.get('high_memory', False)
+        quantum_simulation = requirements.get('quantum_simulation', False)
+        compliance_required = requirements.get('compliance', [])
+        
+        candidate_regions = []
+        
+        # Filter regions based on compliance
+        if compliance_required:
+            compliant_regions = self.get_compliant_regions()
+        else:
+            compliant_regions = list(self.regions.keys())
+        
+        for region in compliant_regions:
+            config = self.regions[region]
+            
+            # Check requirements
+            if gpu_required and not config.gpu_enabled:
+                continue
+            if high_memory and not config.high_memory_instances:
+                continue
+            if quantum_simulation and not config.quantum_simulation_optimized:
+                continue
+            
+            candidate_regions.append(region)
+        
+        # Prefer primary region if it meets requirements
+        if self.primary_region and self.primary_region in candidate_regions:
+            return self.primary_region
+        
+        # Return first suitable region
+        return candidate_regions[0] if candidate_regions else None
+    
+    def generate_terraform_config(self, output_dir: str = "./terraform") -> None:
+        """Generate Terraform infrastructure configuration."""
+        
+        import os
+        
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Main configuration
+        main_tf = os.path.join(output_dir, "main.tf")
+        with open(main_tf, 'w') as f:
+            f.write(self._generate_main_terraform())
+        
+        # Variables
+        vars_tf = os.path.join(output_dir, "variables.tf")
+        with open(vars_tf, 'w') as f:
+            f.write(self._generate_variables_terraform())
+        
+        # Outputs
+        outputs_tf = os.path.join(output_dir, "outputs.tf")
+        with open(outputs_tf, 'w') as f:
+            f.write(self._generate_outputs_terraform())
+        
+        logger.info(f"Generated Terraform configuration in {output_dir}")
+    
+    def _generate_main_terraform(self) -> str:
+        """Generate main Terraform configuration."""
+        
+        config = []
+        config.append("terraform {")
+        config.append("  required_version = \">= 1.0\"")
+        config.append("  required_providers {")
+        config.append("    aws = {")
+        config.append("      source  = \"hashicorp/aws\"")
+        config.append("      version = \"~> 5.0\"")
+        config.append("    }")
+        config.append("  }")
+        config.append("}")
+        config.append("")
+        
+        # Provider configurations for each region
+        for region, region_config in self.regions.items():
+            if region_config.platform == Platform.AWS:
+                config.append(f"provider \"aws\" {{")
+                config.append(f"  alias  = \"{region.value.replace('-', '_')}\"")
+                config.append(f"  region = \"{region.value}\"")
+                config.append("}")
+                config.append("")
+        
+        # VPC configurations
+        for region, region_config in self.regions.items():
+            if region_config.platform == Platform.AWS:
+                region_alias = region.value.replace('-', '_')
+                
+                config.append(f"# VPC for {region.value}")
+                config.append(f"resource \"aws_vpc\" \"darkoperator_{region_alias}\" {{")
+                config.append(f"  provider   = aws.{region_alias}")
+                config.append(f"  cidr_block = \"{region_config.vpc_cidr}\"")
+                config.append("")
+                config.append("  enable_dns_hostnames = true")
+                config.append("  enable_dns_support   = true")
+                config.append("")
+                config.append("  tags = {")
+                config.append(f"    Name        = \"darkoperator-{region.value}\"")
+                config.append("    Environment = var.environment")
+                config.append("    Project     = \"darkoperator\"")
+                config.append("  }")
+                config.append("}")
+                config.append("")
+                
+                # Subnets
+                for i, subnet_cidr in enumerate(region_config.public_subnets):
+                    config.append(f"resource \"aws_subnet\" \"public_{region_alias}_{i}\" {{")
+                    config.append(f"  provider          = aws.{region_alias}")
+                    config.append(f"  vpc_id            = aws_vpc.darkoperator_{region_alias}.id")
+                    config.append(f"  cidr_block        = \"{subnet_cidr}\"")
+                    if i < len(region_config.availability_zones):
+                        config.append(f"  availability_zone = \"{region_config.availability_zones[i]}\"")
+                    config.append("  map_public_ip_on_launch = true")
+                    config.append("")
+                    config.append("  tags = {")
+                    config.append(f"    Name = \"darkoperator-public-{region.value}-{i}\"")
+                    config.append("  }")
+                    config.append("}")
+                    config.append("")
+        
+        return "\n".join(config)
+    
+    def _generate_variables_terraform(self) -> str:
+        """Generate Terraform variables."""
+        
+        variables = []
+        variables.append("variable \"environment\" {")
+        variables.append("  description = \"Deployment environment\"")
+        variables.append("  type        = string")
+        variables.append("  default     = \"production\"")
+        variables.append("}")
+        variables.append("")
+        
+        variables.append("variable \"project_name\" {")
+        variables.append("  description = \"Project name\"")
+        variables.append("  type        = string")
+        variables.append("  default     = \"darkoperator\"")
+        variables.append("}")
+        variables.append("")
+        
+        # GPU instance types
+        variables.append("variable \"gpu_instance_types\" {")
+        variables.append("  description = \"GPU instance types by region\"")
+        variables.append("  type        = map(string)")
+        variables.append("  default = {")
+        
+        for region, config in self.regions.items():
+            if config.gpu_enabled:
+                variables.append(f"    \"{region.value}\" = \"{config.gpu_instance_type}\"")
+        
+        variables.append("  }")
+        variables.append("}")
+        variables.append("")
+        
+        return "\n".join(variables)
+    
+    def _generate_outputs_terraform(self) -> str:
+        """Generate Terraform outputs."""
+        
+        outputs = []
+        
+        for region, region_config in self.regions.items():
+            if region_config.platform == Platform.AWS:
+                region_alias = region.value.replace('-', '_')
+                
+                outputs.append(f"output \"vpc_id_{region_alias}\" {{")
+                outputs.append(f"  description = \"VPC ID for {region.value}\"")
+                outputs.append(f"  value       = aws_vpc.darkoperator_{region_alias}.id")
+                outputs.append("}")
+                outputs.append("")
+        
+        return "\n".join(outputs)
+    
+    def generate_kubernetes_manifests(self, output_dir: str = "./k8s") -> None:
+        """Generate Kubernetes deployment manifests."""
+        
+        import os
+        
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Namespace
+        namespace_yaml = os.path.join(output_dir, "namespace.yaml")
+        with open(namespace_yaml, 'w') as f:
+            f.write(self._generate_k8s_namespace())
+        
+        # ConfigMap for global configuration
+        configmap_yaml = os.path.join(output_dir, "configmap.yaml")
+        with open(configmap_yaml, 'w') as f:
+            f.write(self._generate_k8s_configmap())
+        
+        # Deployment
+        deployment_yaml = os.path.join(output_dir, "deployment.yaml")
+        with open(deployment_yaml, 'w') as f:
+            f.write(self._generate_k8s_deployment())
+        
+        # Service
+        service_yaml = os.path.join(output_dir, "service.yaml")
+        with open(service_yaml, 'w') as f:
+            f.write(self._generate_k8s_service())
+        
+        # HPA (Horizontal Pod Autoscaler)
+        hpa_yaml = os.path.join(output_dir, "hpa.yaml")
+        with open(hpa_yaml, 'w') as f:
+            f.write(self._generate_k8s_hpa())
+        
+        logger.info(f"Generated Kubernetes manifests in {output_dir}")
+    
+    def _generate_k8s_namespace(self) -> str:
+        """Generate Kubernetes namespace."""
+        
+        return """apiVersion: v1
+kind: Namespace
+metadata:
+  name: darkoperator
+  labels:
+    name: darkoperator
+    project: darkoperator-studio
+"""
+    
+    def _generate_k8s_configmap(self) -> str:
+        """Generate Kubernetes ConfigMap."""
+        
+        # Export configuration as JSON string
+        config_json = json.dumps(self.get_deployment_summary(), indent=2)
+        
+        return f"""apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: darkoperator-config
+  namespace: darkoperator
+data:
+  global-config.json: |
+{config_json}
+  supported-languages: "{','.join(self.localization.supported_languages)}"
+  compliance-frameworks: "{','.join([f.value for f in self.compliance.frameworks])}"
+"""
+    
+    def _generate_k8s_deployment(self) -> str:
+        """Generate Kubernetes Deployment."""
+        
+        gpu_support = any(config.gpu_enabled for config in self.regions.values())
+        
+        deployment = """apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: darkoperator-api
+  namespace: darkoperator
+  labels:
+    app: darkoperator-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: darkoperator-api
+  template:
+    metadata:
+      labels:
+        app: darkoperator-api
+    spec:
+      containers:
+      - name: darkoperator-api
+        image: darkoperator/api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: CONFIG_PATH
+          value: "/config/global-config.json"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi" 
+            cpu: "1000m" """
+        
+        if gpu_support:
+            deployment += """
+            nvidia.com/gpu: 1"""
+        
+        deployment += """
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: config
+        configMap:
+          name: darkoperator-config
+"""
+        
+        if gpu_support:
+            deployment += """      nodeSelector:
+        accelerator: nvidia-tesla-k80
+"""
+        
+        return deployment
+    
+    def _generate_k8s_service(self) -> str:
+        """Generate Kubernetes Service."""
+        
+        return """apiVersion: v1
+kind: Service
+metadata:
+  name: darkoperator-api-service
+  namespace: darkoperator
+  labels:
+    app: darkoperator-api
+spec:
+  selector:
+    app: darkoperator-api
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  type: LoadBalancer
+"""
+    
+    def _generate_k8s_hpa(self) -> str:
+        """Generate Kubernetes Horizontal Pod Autoscaler."""
+        
+        return """apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: darkoperator-api-hpa
+  namespace: darkoperator
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: darkoperator-api
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+"""
+    
+    def generate_docker_compose(self, output_file: str = "docker-compose.yml") -> None:
+        """Generate Docker Compose configuration."""
+        
+        gpu_support = any(config.gpu_enabled for config in self.regions.values())
+        
+        compose_config = {
+            "version": "3.8",
+            "services": {
+                "darkoperator-api": {
+                    "image": "darkoperator/api:latest",
+                    "ports": ["8000:8000"],
+                    "environment": {
+                        "ENVIRONMENT": "production",
+                        "CONFIG_PATH": "/app/config/global-config.json",
+                        "SUPPORTED_LANGUAGES": ",".join(self.localization.supported_languages),
+                        "COMPLIANCE_FRAMEWORKS": ",".join([f.value for f in self.compliance.frameworks])
+                    },
+                    "volumes": [
+                        "./config:/app/config:ro"
+                    ],
+                    "restart": "unless-stopped",
+                    "healthcheck": {
+                        "test": ["CMD", "curl", "-f", "http://localhost:8000/health"],
+                        "interval": "30s",
+                        "timeout": "10s",
+                        "retries": 3
+                    }
+                },
+                "darkoperator-worker": {
+                    "image": "darkoperator/worker:latest",
+                    "environment": {
+                        "WORKER_TYPE": "quantum-scheduler",
+                        "CONFIG_PATH": "/app/config/global-config.json"
+                    },
+                    "volumes": [
+                        "./config:/app/config:ro"
+                    ],
+                    "restart": "unless-stopped",
+                    "depends_on": ["darkoperator-api"]
+                },
+                "redis": {
+                    "image": "redis:7-alpine",
+                    "ports": ["6379:6379"],
+                    "restart": "unless-stopped",
+                    "volumes": ["redis_data:/data"]
+                },
+                "postgres": {
+                    "image": "postgres:15",
+                    "environment": {
+                        "POSTGRES_DB": "darkoperator",
+                        "POSTGRES_USER": "darkoperator",
+                        "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD}"
+                    },
+                    "ports": ["5432:5432"],
+                    "volumes": [
+                        "postgres_data:/var/lib/postgresql/data",
+                        "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+                    ],
+                    "restart": "unless-stopped"
+                }
+            },
+            "volumes": {
+                "redis_data": {},
+                "postgres_data": {}
+            }
+        }
+        
+        # Add GPU support if enabled
+        if gpu_support:
+            compose_config["services"]["darkoperator-worker"]["deploy"] = {
+                "resources": {
+                    "reservations": {
+                        "devices": [
+                            {
+                                "driver": "nvidia",
+                                "count": 1,
+                                "capabilities": ["gpu"]
+                            }
+                        ]
+                    }
+                }
+            }
+        
+        # Add monitoring stack
+        compose_config["services"]["prometheus"] = {
+            "image": "prom/prometheus:latest",
+            "ports": ["9090:9090"],
+            "volumes": ["./prometheus.yml:/etc/prometheus/prometheus.yml"],
+            "restart": "unless-stopped"
+        }
+        
+        compose_config["services"]["grafana"] = {
+            "image": "grafana/grafana:latest",
+            "ports": ["3000:3000"],
+            "environment": {
+                "GF_SECURITY_ADMIN_PASSWORD": "${GRAFANA_PASSWORD}"
+            },
+            "volumes": ["grafana_data:/var/lib/grafana"],
+            "restart": "unless-stopped"
+        }
+        
+        compose_config["volumes"]["grafana_data"] = {}
+        
+        # Write docker-compose.yml
+        import yaml
+        with open(output_file, 'w') as f:
+            yaml.dump(compose_config, f, default_flow_style=False)
+        
+        logger.info(f"Generated Docker Compose configuration: {output_file}")
+    
+    def export_for_cloud_formation(self, output_file: str = "cloudformation.json") -> None:
+        """Export configuration as AWS CloudFormation template."""
+        
+        cf_template = {
+            "AWSTemplateFormatVersion": "2010-09-09",
+            "Description": "DarkOperator Studio multi-region deployment",
+            "Parameters": {
+                "Environment": {
+                    "Type": "String",
+                    "Default": "production",
+                    "Description": "Deployment environment"
+                },
+                "InstanceType": {
+                    "Type": "String",
+                    "Default": "t3.medium",
+                    "Description": "EC2 instance type"
+                }
+            },
+            "Resources": {},
+            "Outputs": {}
+        }
+        
+        # Add resources for each region
+        for region, config in self.regions.items():
+            if config.platform == Platform.AWS:
+                region_name = region.value.replace('-', '')
+                
+                # VPC
+                cf_template["Resources"][f"VPC{region_name}"] = {
+                    "Type": "AWS::EC2::VPC",
+                    "Properties": {
+                        "CidrBlock": config.vpc_cidr,
+                        "EnableDnsHostnames": True,
+                        "EnableDnsSupport": True,
+                        "Tags": [
+                            {"Key": "Name", "Value": f"darkoperator-{region.value}"},
+                            {"Key": "Project", "Value": "darkoperator"}
+                        ]
+                    }
+                }
+                
+                # Internet Gateway
+                cf_template["Resources"][f"IGW{region_name}"] = {
+                    "Type": "AWS::EC2::InternetGateway",
+                    "Properties": {
+                        "Tags": [
+                            {"Key": "Name", "Value": f"darkoperator-igw-{region.value}"}
+                        ]
+                    }
+                }
+                
+                # Attach Gateway
+                cf_template["Resources"][f"AttachGateway{region_name}"] = {
+                    "Type": "AWS::EC2::VPCGatewayAttachment",
+                    "Properties": {
+                        "VpcId": {"Ref": f"VPC{region_name}"},
+                        "InternetGatewayId": {"Ref": f"IGW{region_name}"}
+                    }
+                }
+        
+        # Save CloudFormation template
+        with open(output_file, 'w') as f:
+            json.dump(cf_template, f, indent=2)
+        
+        logger.info(f"Generated CloudFormation template: {output_file}")
