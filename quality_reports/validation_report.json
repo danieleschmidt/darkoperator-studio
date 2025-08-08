@@ -1,0 +1,158 @@
+{
+  "total_tests": 14,
+  "passed_tests": 7,
+  "failed_tests": 7,
+  "success_rate": 0.5,
+  "execution_time": 0.02037978172302246,
+  "errors": [
+    {
+      "component": "Physics Benchmarks",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 135, in validate_physics_benchmarks\n    from darkoperator.benchmarks.physics_benchmarks import (\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3140962
+    },
+    {
+      "component": "Quantum Scheduler",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 206, in validate_quantum_scheduler\n    from darkoperator.planning.quantum_scheduler import QuantumTaskScheduler, QuantumTask\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3154652
+    },
+    {
+      "component": "Security",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 278, in validate_security_enhancements\n    from darkoperator.security.planning_security import PlanningSecurityValidator\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3165424
+    },
+    {
+      "component": "Model Hub",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 334, in validate_model_hub\n    from darkoperator.hub.model_hub import ModelHub, PhysicsModelRegistry\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3175921
+    },
+    {
+      "component": "Visualization",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 382, in validate_visualization_system\n    from darkoperator.visualization.interactive import Interactive3DVisualizer, ParticleEventVisualizer\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.318617
+    },
+    {
+      "component": "Distributed Training",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 423, in validate_distributed_training\n    from darkoperator.distributed.gpu_trainer import (\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3195555
+    },
+    {
+      "component": "Global Deployment",
+      "error": "Traceback (most recent call last):\n  File \"/root/repo/validate_enhancements.py\", line 484, in validate_global_deployment\n    from darkoperator.deployment.global_config import GlobalDeploymentConfig, RegionConfig\n  File \"/root/repo/darkoperator/__init__.py\", line 13, in <module>\n    from .operators import CalorimeterOperator, TrackerOperator, MuonOperator\n  File \"/root/repo/darkoperator/operators/__init__.py\", line 3, in <module>\n    from .calorimeter import CalorimeterOperator\n  File \"/root/repo/darkoperator/operators/calorimeter.py\", line 3, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+      "timestamp": 1754626155.3205743
+    }
+  ],
+  "detailed_results": {
+    "Physics Benchmarks": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Physics benchmark file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3006063
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test physics benchmarks: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.3070986
+      }
+    ],
+    "Quantum Scheduler": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Quantum scheduler file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3143792
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test quantum scheduler: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.315175
+      }
+    ],
+    "Security": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Security enhancement file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3156598
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test security enhancements: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.3163195
+      }
+    ],
+    "Model Hub": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Model hub file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3167064
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test model hub: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.317377
+      }
+    ],
+    "Visualization": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "3D visualization file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3177557
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test visualization system: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.318405
+      }
+    ],
+    "Distributed Training": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Distributed training file exists",
+        "metrics": {},
+        "timestamp": 1754626155.3187692
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test distributed training: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.3193698
+      }
+    ],
+    "Global Deployment": [
+      {
+        "test_name": "File Existence",
+        "passed": true,
+        "details": "Global deployment file exists",
+        "metrics": {},
+        "timestamp": 1754626155.319712
+      },
+      {
+        "test_name": "Functionality Test",
+        "passed": false,
+        "details": "Failed to test global deployment: No module named 'torch'",
+        "metrics": {},
+        "timestamp": 1754626155.3203576
+      }
+    ]
+  }
+}
