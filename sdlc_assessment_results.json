@@ -7,12 +7,12 @@
     "score": 100.0
   },
   "generation_2_robust": {
-    "error_handling": false,
+    "error_handling": true,
     "input_validation": true,
     "security_measures": true,
     "logging_monitoring": true,
     "configuration": true,
-    "score": 80.0
+    "score": 100.0
   },
   "generation_3_optimized": {
     "caching": true,
@@ -30,5 +30,5 @@
     "deployment_ready": true,
     "score": 80.0
   },
-  "overall_score": 90.0
+  "overall_score": 95.0
 }

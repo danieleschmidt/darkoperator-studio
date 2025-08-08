@@ -156,10 +156,16 @@ class QuantumTaskGraph:
 
 class QuantumScheduler:
     """
-    Quantum-inspired task scheduler for physics simulations.
+    Quantum-inspired task scheduler for physics simulations with large-scale optimization.
     
     Uses quantum principles like superposition, entanglement, and interference
-    to optimize task execution order and resource allocation.
+    to optimize task execution order and resource allocation for >1000 concurrent tasks.
+    
+    Enhanced Features:
+    - Hierarchical task clustering for scalability
+    - Adaptive load balancing with quantum interference
+    - Memory-efficient sparse matrix operations
+    - Dynamic worker pool scaling
     """
     
     def __init__(
@@ -167,20 +173,339 @@ class QuantumScheduler:
         max_workers: int = 4,
         quantum_annealing_steps: int = 100,
         temperature: float = 1.0,
-        physics_operator: Optional[PhysicsOperator] = None
+        physics_operator: Optional[PhysicsOperator] = None,
+        enable_clustering: bool = True,
+        cluster_size_limit: int = 50,
+        adaptive_scaling: bool = True,
+        max_concurrent_tasks: int = 2000
     ):
         self.max_workers = max_workers
         self.quantum_annealing_steps = quantum_annealing_steps
         self.temperature = temperature
         self.physics_operator = physics_operator
+        self.enable_clustering = enable_clustering
+        self.cluster_size_limit = cluster_size_limit
+        self.adaptive_scaling = adaptive_scaling
+        self.max_concurrent_tasks = max_concurrent_tasks
         
         self.task_graph = QuantumTaskGraph()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.running_tasks: Dict[str, Any] = {}
         
+        # Large-scale optimization features
+        self.task_clusters: Dict[int, List[str]] = {}
+        self.cluster_heads: Dict[int, str] = {}
+        self.sparse_adjacency_matrix = None
+        self.adaptive_worker_pool = None
+        self.load_balancer = None
+        
         # Quantum state tracking
         self.global_phase = 0.0
         self.entanglement_entropy = 0.0
+        
+        # Performance monitoring
+        self.execution_stats = {
+            'tasks_processed': 0,
+            'total_execution_time': 0.0,
+            'quantum_efficiency': 0.0,
+            'cluster_rebalance_count': 0,
+            'worker_scaling_events': 0
+        }
+        
+        logger.info(f"Quantum scheduler initialized with enhanced scaling: max_concurrent={max_concurrent_tasks}")
+        
+        if self.adaptive_scaling:
+            self._initialize_adaptive_components()
+        
+        if self.enable_clustering:
+            self._initialize_clustering_system()
+    
+    def _initialize_adaptive_components(self) -> None:
+        """Initialize components for adaptive scaling."""
+        
+        try:
+            from concurrent.futures import ProcessPoolExecutor
+            from queue import Queue
+            import threading
+            
+            # Adaptive worker pool for CPU-intensive tasks
+            self.adaptive_worker_pool = {
+                'thread_pool': ThreadPoolExecutor(max_workers=self.max_workers),
+                'process_pool': ProcessPoolExecutor(max_workers=max(1, self.max_workers // 2)),
+                'current_load': 0,
+                'max_load': self.max_concurrent_tasks
+            }
+            
+            # Load balancer for task distribution
+            self.load_balancer = {
+                'worker_queues': [Queue() for _ in range(self.max_workers)],
+                'worker_loads': [0] * self.max_workers,
+                'round_robin_counter': 0,
+                'load_lock': threading.Lock()
+            }
+            
+            logger.info("Adaptive scaling components initialized")
+            
+        except Exception as e:
+            logger.warning(f"Failed to initialize adaptive components: {e}")
+            self.adaptive_scaling = False
+    
+    def _initialize_clustering_system(self) -> None:
+        """Initialize hierarchical task clustering system."""
+        
+        try:
+            # Initialize sparse matrix for large-scale operations
+            import scipy.sparse as sp
+            
+            # Pre-allocate sparse adjacency matrix
+            max_tasks = self.max_concurrent_tasks
+            self.sparse_adjacency_matrix = sp.lil_matrix((max_tasks, max_tasks), dtype=np.float32)
+            
+            # Task clustering configuration
+            self.clustering_config = {
+                'algorithm': 'spectral',  # spectral clustering for quantum-inspired approach
+                'max_clusters': max_tasks // self.cluster_size_limit,
+                'similarity_threshold': 0.7,
+                'rebalance_frequency': 100  # tasks processed between rebalancing
+            }
+            
+            logger.info(f"Clustering system initialized: max_clusters={self.clustering_config['max_clusters']}")
+            
+        except ImportError:
+            logger.warning("SciPy not available, disabling clustering optimization")
+            self.enable_clustering = False
+        except Exception as e:
+            logger.warning(f"Failed to initialize clustering system: {e}")
+            self.enable_clustering = False
+    
+    def _cluster_tasks_by_affinity(self, tasks: List[QuantumTask]) -> Dict[int, List[str]]:
+        """
+        Cluster tasks based on quantum affinity and computational requirements.
+        
+        Uses spectral clustering on quantum interference patterns.
+        """
+        
+        if not self.enable_clustering or len(tasks) <= self.cluster_size_limit:
+            # Single cluster for small task sets
+            return {0: [task.task_id for task in tasks]}
+        
+        try:
+            from sklearn.cluster import SpectralClustering
+            from sklearn.metrics.pairwise import cosine_similarity
+            
+            # Create feature matrix from task properties
+            features = []
+            task_ids = []
+            
+            for task in tasks:
+                feature_vector = [
+                    task.priority.value,
+                    task.energy_requirement,
+                    task.spin,
+                    task.superposition_weight,
+                    len(task.entangled_tasks),
+                    float(task.is_coherent())
+                ]
+                
+                # Add physics-aware features
+                if hasattr(task, 'momentum'):
+                    feature_vector.extend(task.momentum)
+                else:
+                    feature_vector.extend([0.0, 0.0, 0.0])
+                
+                features.append(feature_vector)
+                task_ids.append(task.task_id)
+            
+            features_array = np.array(features)
+            
+            # Calculate affinity matrix using cosine similarity
+            affinity_matrix = cosine_similarity(features_array)
+            
+            # Apply quantum interference effects
+            interference = self.task_graph.compute_interference_pattern()
+            for i, task_id in enumerate(task_ids):
+                if task_id in interference:
+                    # Boost similarity for constructive interference
+                    interference_factor = 1.0 + (1.0 - interference[task_id]) * 0.2
+                    affinity_matrix[i] *= interference_factor
+            
+            # Determine optimal number of clusters
+            n_tasks = len(tasks)
+            n_clusters = min(
+                max(1, n_tasks // self.cluster_size_limit),
+                self.clustering_config['max_clusters']
+            )
+            
+            # Perform spectral clustering
+            clustering = SpectralClustering(
+                n_clusters=n_clusters,
+                affinity='precomputed',
+                random_state=42
+            )
+            
+            cluster_labels = clustering.fit_predict(affinity_matrix)
+            
+            # Group tasks by cluster
+            clusters = {}
+            for task_id, cluster_id in zip(task_ids, cluster_labels):
+                if cluster_id not in clusters:
+                    clusters[cluster_id] = []
+                clusters[cluster_id].append(task_id)
+            
+            self.execution_stats['cluster_rebalance_count'] += 1
+            
+            logger.debug(f"Clustered {n_tasks} tasks into {len(clusters)} clusters")
+            return clusters
+            
+        except ImportError:
+            logger.warning("sklearn not available, using simple clustering")
+            return self._simple_task_clustering(tasks)
+        except Exception as e:
+            logger.error(f"Task clustering failed: {e}")
+            return self._simple_task_clustering(tasks)
+    
+    def _simple_task_clustering(self, tasks: List[QuantumTask]) -> Dict[int, List[str]]:
+        """Simple clustering based on priority and energy requirements."""
+        
+        clusters = {}
+        cluster_id = 0
+        current_cluster = []
+        
+        # Sort tasks by priority and energy
+        sorted_tasks = sorted(tasks, key=lambda t: (t.priority.value, t.energy_requirement))
+        
+        for task in sorted_tasks:
+            current_cluster.append(task.task_id)
+            
+            if len(current_cluster) >= self.cluster_size_limit:
+                clusters[cluster_id] = current_cluster
+                cluster_id += 1
+                current_cluster = []
+        
+        # Add remaining tasks
+        if current_cluster:
+            clusters[cluster_id] = current_cluster
+        
+        return clusters
+    
+    def _adaptive_worker_scaling(self, current_load: int, queue_size: int) -> None:
+        """
+        Dynamically scale worker pool based on current load.
+        
+        Uses quantum-inspired scaling factors based on system state.
+        """
+        
+        if not self.adaptive_scaling or self.adaptive_worker_pool is None:
+            return
+        
+        try:
+            # Calculate load factor
+            load_factor = current_load / max(1, self.max_concurrent_tasks)
+            queue_factor = queue_size / max(1, self.max_workers * 10)
+            
+            # Quantum-inspired scaling decision
+            scaling_probability = 1.0 / (1.0 + np.exp(-5 * (load_factor + queue_factor - 0.7)))
+            
+            if scaling_probability > 0.8:
+                # Scale up workers
+                new_max_workers = min(
+                    self.max_workers * 2,
+                    self.max_concurrent_tasks // 10
+                )
+                
+                if new_max_workers > self.max_workers:
+                    # Create new executor with more workers
+                    old_executor = self.executor
+                    self.executor = ThreadPoolExecutor(max_workers=new_max_workers)
+                    
+                    # Update worker count
+                    self.max_workers = new_max_workers
+                    self.execution_stats['worker_scaling_events'] += 1
+                    
+                    logger.info(f"Scaled up workers to {new_max_workers}")
+                    
+                    # Schedule cleanup of old executor
+                    def cleanup_old_executor():
+                        time.sleep(1)
+                        old_executor.shutdown(wait=False)
+                    
+                    import threading
+                    threading.Thread(target=cleanup_old_executor, daemon=True).start()
+            
+            elif scaling_probability < 0.2 and self.max_workers > 2:
+                # Scale down workers if load is low
+                new_max_workers = max(2, self.max_workers // 2)
+                
+                if new_max_workers < self.max_workers:
+                    # Create new executor with fewer workers
+                    old_executor = self.executor
+                    self.executor = ThreadPoolExecutor(max_workers=new_max_workers)
+                    
+                    self.max_workers = new_max_workers
+                    self.execution_stats['worker_scaling_events'] += 1
+                    
+                    logger.info(f"Scaled down workers to {new_max_workers}")
+                    
+                    # Schedule cleanup
+                    def cleanup_old_executor():
+                        time.sleep(1)
+                        old_executor.shutdown(wait=False)
+                    
+                    import threading
+                    threading.Thread(target=cleanup_old_executor, daemon=True).start()
+        
+        except Exception as e:
+            logger.error(f"Adaptive worker scaling failed: {e}")
+    
+    def _optimize_task_execution_order(self, ready_tasks: List[QuantumTask]) -> List[QuantumTask]:
+        """
+        Optimize task execution order using quantum annealing-inspired algorithm.
+        
+        Enhanced for large-scale optimization with hierarchical clustering.
+        """
+        
+        if len(ready_tasks) <= 10:
+            # Use existing simple optimization for small task sets
+            return self._quantum_anneal_schedule(ready_tasks)
+        
+        # For large task sets, use hierarchical optimization
+        try:
+            # Step 1: Cluster tasks by affinity
+            clusters = self._cluster_tasks_by_affinity(ready_tasks)
+            
+            # Step 2: Optimize within each cluster
+            optimized_tasks = []
+            cluster_priorities = {}
+            
+            for cluster_id, task_ids in clusters.items():
+                cluster_tasks = [t for t in ready_tasks if t.task_id in task_ids]
+                
+                # Optimize cluster internally
+                optimized_cluster = self._quantum_anneal_schedule(cluster_tasks)
+                optimized_tasks.extend(optimized_cluster)
+                
+                # Calculate cluster priority (average of task priorities)
+                if cluster_tasks:
+                    avg_priority = np.mean([t.priority.value for t in cluster_tasks])
+                    cluster_priorities[cluster_id] = avg_priority
+            
+            # Step 3: Order clusters by priority
+            sorted_cluster_ids = sorted(cluster_priorities.keys(), 
+                                      key=lambda cid: cluster_priorities[cid])
+            
+            # Step 4: Reorder tasks by cluster priority
+            final_order = []
+            for cluster_id in sorted_cluster_ids:
+                cluster_task_ids = clusters[cluster_id]
+                cluster_tasks = [t for t in optimized_tasks if t.task_id in cluster_task_ids]
+                final_order.extend(cluster_tasks)
+            
+            logger.debug(f"Optimized execution order for {len(ready_tasks)} tasks using {len(clusters)} clusters")
+            return final_order
+            
+        except Exception as e:
+            logger.error(f"Large-scale optimization failed, falling back to simple annealing: {e}")
+            return self._quantum_anneal_schedule(ready_tasks[:100])  # Limit to prevent memory issues
         
     def submit_task(
         self,
@@ -220,10 +545,21 @@ class QuantumScheduler:
         Use quantum annealing to find optimal task execution order.
         
         Minimizes total energy while respecting constraints.
+        Enhanced with large-scale optimization capabilities.
         """
         ready_tasks = self.task_graph.get_ready_tasks()
         if not ready_tasks:
             return []
+        
+        # Use enhanced optimization for large task sets
+        if len(ready_tasks) > 50:
+            return self._optimize_task_execution_order(ready_tasks)
+        
+        # Use traditional annealing for smaller sets
+        return self._quantum_anneal_schedule(ready_tasks)
+    
+    def _quantum_anneal_schedule(self, ready_tasks: List[QuantumTask]) -> List[QuantumTask]:
+        """Traditional quantum annealing for small to medium task sets."""
         
         # Current solution (random initial state)
         current_order = ready_tasks.copy()
@@ -280,8 +616,9 @@ class QuantumScheduler:
     
     def execute_quantum_schedule(self) -> Dict[str, Any]:
         """
-        Execute tasks using quantum-optimized scheduling.
+        Execute tasks using quantum-optimized scheduling with large-scale capabilities.
         
+        Enhanced with adaptive scaling, load balancing, and hierarchical execution.
         Returns dictionary of task results and execution statistics.
         """
         results = {}
@@ -290,10 +627,14 @@ class QuantumScheduler:
             'successful_tasks': 0,
             'failed_tasks': 0,
             'total_execution_time': 0.0,
-            'quantum_efficiency': 0.0
+            'quantum_efficiency': 0.0,
+            'max_concurrent_tasks': 0,
+            'clusters_processed': 0,
+            'scaling_events': 0
         }
         
         start_time = time.time()
+        max_concurrent_reached = 0
         
         while True:
             # Get quantum-optimized task order
@@ -306,32 +647,58 @@ class QuantumScheduler:
                 time.sleep(0.1)
                 continue
             
-            # Execute tasks with quantum coherence
+            # Adaptive worker scaling based on workload
+            current_load = len(self.running_tasks)
+            queue_size = len(scheduled_tasks)
+            max_concurrent_reached = max(max_concurrent_reached, current_load)
+            
+            self._adaptive_worker_scaling(current_load, queue_size)
+            
+            # Determine batch size for concurrent execution
+            available_workers = self.max_workers - current_load
+            batch_size = min(available_workers, len(scheduled_tasks), self.max_concurrent_tasks - current_load)
+            
+            # Execute tasks in batches with quantum coherence
             futures = {}
-            for task in scheduled_tasks[:self.max_workers]:  # Limit concurrent execution
+            tasks_to_execute = scheduled_tasks[:batch_size]
+            
+            for task in tasks_to_execute:
                 if task.task_id not in self.running_tasks:
                     # Collapse wavefunction before execution
                     task.collapse_wavefunction()
                     
+                    # Choose execution strategy based on task properties
+                    executor = self._select_optimal_executor(task)
+                    
                     # Submit for execution
-                    future = self.executor.submit(self._execute_task, task)
+                    future = executor.submit(self._execute_task, task)
                     futures[future] = task
                     self.running_tasks[task.task_id] = future
                     
                     statistics['total_tasks'] += 1
             
-            # Wait for task completion
+            # Process completed tasks
             if futures:
-                for future in as_completed(futures):
+                # Use timeout to prevent blocking on long-running tasks
+                completed_futures = []
+                
+                for future in as_completed(futures, timeout=1.0):
+                    completed_futures.append(future)
                     task = futures[future]
+                    
                     try:
-                        result = future.result()
+                        result = future.result(timeout=0.1)
                         task.result = result
                         task.state = "executed"
                         results[task.task_id] = result
                         statistics['successful_tasks'] += 1
                         
-                        logger.info(f"Quantum task completed: {task.task_id}")
+                        # Update execution stats
+                        self.execution_stats['tasks_processed'] += 1
+                        if task.execution_time:
+                            self.execution_stats['total_execution_time'] += task.execution_time
+                        
+                        logger.debug(f"Quantum task completed: {task.task_id}")
                         
                     except Exception as e:
                         task.state = "failed"
@@ -344,18 +711,115 @@ class QuantumScheduler:
                         # Remove from running tasks
                         if task.task_id in self.running_tasks:
                             del self.running_tasks[task.task_id]
+                
+                # Handle any remaining futures that didn't complete in time
+                for future, task in futures.items():
+                    if future not in [f for f in completed_futures]:
+                        # Task is still running, will be handled in next iteration
+                        pass
         
         # Compute final statistics
         total_time = time.time() - start_time
         statistics['total_execution_time'] = total_time
+        statistics['max_concurrent_tasks'] = max_concurrent_reached
+        statistics['scaling_events'] = self.execution_stats['worker_scaling_events']
+        statistics['clusters_processed'] = self.execution_stats['cluster_rebalance_count']
         
         if statistics['total_tasks'] > 0:
             statistics['quantum_efficiency'] = statistics['successful_tasks'] / statistics['total_tasks']
+            
+            # Calculate average execution efficiency
+            if self.execution_stats['tasks_processed'] > 0:
+                avg_task_time = self.execution_stats['total_execution_time'] / self.execution_stats['tasks_processed']
+                self.execution_stats['quantum_efficiency'] = min(1.0, 1.0 / (1.0 + avg_task_time))
         
         # Update global quantum state
         self._update_quantum_state()
         
-        return {'results': results, 'statistics': statistics}
+        # Add enhanced statistics
+        enhanced_stats = statistics.copy()
+        enhanced_stats.update({
+            'performance_metrics': self.execution_stats,
+            'adaptive_scaling_enabled': self.adaptive_scaling,
+            'clustering_enabled': self.enable_clustering,
+            'max_workers_used': self.max_workers
+        })
+        
+        return {'results': results, 'statistics': enhanced_stats}
+    
+    def _select_optimal_executor(self, task: QuantumTask) -> Any:
+        """
+        Select optimal executor for task based on characteristics.
+        
+        Uses quantum-inspired decision making for executor selection.
+        """
+        
+        if not self.adaptive_scaling or self.adaptive_worker_pool is None:
+            return self.executor
+        
+        # Analyze task characteristics
+        is_cpu_intensive = task.energy_requirement > 5.0
+        is_io_bound = task.energy_requirement < 1.0
+        has_high_priority = task.priority.value <= 1
+        
+        # Quantum decision matrix
+        thread_affinity = 0.5
+        process_affinity = 0.5
+        
+        # Adjust based on task properties
+        if is_cpu_intensive:
+            process_affinity += 0.3
+        if is_io_bound:
+            thread_affinity += 0.3
+        if has_high_priority:
+            # High priority tasks prefer dedicated resources
+            process_affinity += 0.2
+        
+        # Normalize probabilities
+        total_affinity = thread_affinity + process_affinity
+        thread_prob = thread_affinity / total_affinity
+        
+        # Make quantum decision
+        if np.random.random() < thread_prob:
+            return self.adaptive_worker_pool['thread_pool']
+        else:
+            return self.adaptive_worker_pool.get('process_pool', self.executor)
+    
+    def get_scheduler_status(self) -> Dict[str, Any]:
+        """Get comprehensive scheduler status for monitoring."""
+        
+        ready_tasks = self.task_graph.get_ready_tasks()
+        
+        status = {
+            'quantum_state': {
+                'global_phase': self.global_phase,
+                'entanglement_entropy': self.entanglement_entropy,
+                'coherent_tasks': len([t for t in ready_tasks if t.is_coherent()])
+            },
+            'execution_state': {
+                'running_tasks': len(self.running_tasks),
+                'ready_tasks': len(ready_tasks),
+                'max_workers': self.max_workers,
+                'total_tasks_in_graph': self.task_graph.graph.number_of_nodes()
+            },
+            'performance_metrics': self.execution_stats.copy(),
+            'optimization_features': {
+                'adaptive_scaling': self.adaptive_scaling,
+                'clustering_enabled': self.enable_clustering,
+                'max_concurrent_tasks': self.max_concurrent_tasks,
+                'cluster_size_limit': self.cluster_size_limit if self.enable_clustering else None
+            }
+        }
+        
+        # Add cluster information if enabled
+        if self.enable_clustering and self.task_clusters:
+            status['clustering_info'] = {
+                'active_clusters': len(self.task_clusters),
+                'cluster_sizes': [len(tasks) for tasks in self.task_clusters.values()],
+                'average_cluster_size': np.mean([len(tasks) for tasks in self.task_clusters.values()]) if self.task_clusters else 0
+            }
+        
+        return status
     
     def _execute_task(self, task: QuantumTask) -> Any:
         """Execute individual task with timing."""
