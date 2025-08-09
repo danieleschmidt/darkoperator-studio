@@ -6,17 +6,15 @@ with physics-informed optimizations and fault tolerance.
 """
 
 from .gpu_trainer import DistributedGPUTrainer, GPUCluster
-from .data_parallel import PhysicsDataParallel, QuantumDataParallel
-from .model_parallel import ModelParallelManager, PhysicsModelShard
-from .communication import QuantumAllReduce, PhysicsGradientSync
+# from .data_parallel import PhysicsDataParallel, QuantumDataParallel
+# from .model_parallel import ModelParallelManager, PhysicsModelShard
+# from .communication import QuantumAllReduce, PhysicsGradientSync
+from .auto_scaling import ResourceMonitor, AutoScaler, DistributedCoordinator
 
 __all__ = [
     'DistributedGPUTrainer',
     'GPUCluster', 
-    'PhysicsDataParallel',
-    'QuantumDataParallel',
-    'ModelParallelManager',
-    'PhysicsModelShard',
-    'QuantumAllReduce',
-    'PhysicsGradientSync'
+    'ResourceMonitor',
+    'AutoScaler', 
+    'DistributedCoordinator',
 ]
