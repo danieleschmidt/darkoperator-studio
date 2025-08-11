@@ -1,0 +1,69 @@
+{
+  "operating_systems": {
+    "linux": {
+      "supported": true,
+      "distributions": [
+        "Ubuntu",
+        "CentOS",
+        "RHEL",
+        "Debian"
+      ],
+      "min_version": "18.04",
+      "package_manager": "apt/yum"
+    },
+    "macos": {
+      "supported": true,
+      "min_version": "10.15",
+      "architecture": [
+        "x86_64",
+        "arm64"
+      ],
+      "package_manager": "brew"
+    },
+    "windows": {
+      "supported": true,
+      "min_version": "Windows 10",
+      "wsl_required": true,
+      "package_manager": "conda"
+    }
+  },
+  "python_versions": [
+    "3.9",
+    "3.10",
+    "3.11",
+    "3.12"
+  ],
+  "containerization": {
+    "docker_support": true,
+    "kubernetes_support": true,
+    "base_images": [
+      "python:3.11-slim",
+      "ubuntu:22.04"
+    ]
+  },
+  "cloud_platforms": {
+    "aws": [
+      "EC2",
+      "ECS",
+      "Lambda",
+      "SageMaker"
+    ],
+    "gcp": [
+      "Compute Engine",
+      "GKE",
+      "Cloud Run",
+      "Vertex AI"
+    ],
+    "azure": [
+      "Virtual Machines",
+      "AKS",
+      "Container Instances",
+      "ML Studio"
+    ],
+    "on_premise": [
+      "Kubernetes",
+      "Docker Swarm",
+      "Bare Metal"
+    ]
+  }
+}

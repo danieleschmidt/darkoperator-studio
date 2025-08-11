@@ -1,0 +1,17 @@
+{
+  "lhc_data": {
+    "retention_period_years": 10,
+    "anonymization_after_years": 5,
+    "deletion_policy": "secure_overwrite"
+  },
+  "user_data": {
+    "retention_period_years": 2,
+    "anonymization_after_years": 1,
+    "deletion_policy": "cryptographic_erasure"
+  },
+  "logs": {
+    "retention_period_days": 90,
+    "archival_period_years": 1,
+    "deletion_policy": "standard"
+  }
+}
