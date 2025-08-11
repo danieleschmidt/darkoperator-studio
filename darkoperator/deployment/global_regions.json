@@ -1,0 +1,59 @@
+{
+  "regions": {
+    "us-east": {
+      "name": "US East (Virginia)",
+      "timezone": "America/New_York",
+      "currency": "USD",
+      "data_residency": "US",
+      "compliance": [
+        "SOC2",
+        "FedRAMP"
+      ],
+      "compute_resources": {
+        "max_cpu_cores": 64,
+        "max_memory_gb": 256,
+        "gpu_enabled": true
+      }
+    },
+    "eu-west": {
+      "name": "Europe West (Ireland)",
+      "timezone": "Europe/Dublin",
+      "currency": "EUR",
+      "data_residency": "EU",
+      "compliance": [
+        "GDPR",
+        "ISO27001"
+      ],
+      "compute_resources": {
+        "max_cpu_cores": 64,
+        "max_memory_gb": 256,
+        "gpu_enabled": true
+      }
+    },
+    "asia-pacific": {
+      "name": "Asia Pacific (Tokyo)",
+      "timezone": "Asia/Tokyo",
+      "currency": "JPY",
+      "data_residency": "APAC",
+      "compliance": [
+        "PDPA",
+        "ISO27001"
+      ],
+      "compute_resources": {
+        "max_cpu_cores": 32,
+        "max_memory_gb": 128,
+        "gpu_enabled": false
+      }
+    }
+  },
+  "load_balancing": {
+    "strategy": "latency_based",
+    "health_checks": true,
+    "failover_enabled": true
+  },
+  "data_sync": {
+    "replication_strategy": "async",
+    "backup_regions": 2,
+    "sync_interval_minutes": 15
+  }
+}

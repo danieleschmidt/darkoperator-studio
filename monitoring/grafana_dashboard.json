@@ -1,0 +1,38 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "DarkOperator Production Dashboard",
+    "panels": [
+      {
+        "title": "Event Processing Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(darkoperator_events_processed_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Anomaly Detection Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "darkoperator_anomalies_detected_total"
+          }
+        ]
+      },
+      {
+        "title": "System Resources",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "process_resident_memory_bytes"
+          },
+          {
+            "expr": "rate(process_cpu_seconds_total[5m])"
+          }
+        ]
+      }
+    ]
+  }
+}

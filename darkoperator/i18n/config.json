@@ -1,0 +1,18 @@
+{
+  "default_language": "en",
+  "supported_languages": [
+    "en",
+    "es",
+    "fr",
+    "de",
+    "ja",
+    "zh"
+  ],
+  "fallback_language": "en",
+  "translation_domains": [
+    "ui",
+    "errors",
+    "physics",
+    "reports"
+  ]
+}

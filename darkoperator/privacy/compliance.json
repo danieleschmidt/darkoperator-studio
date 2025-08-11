@@ -1,0 +1,33 @@
+{
+  "gdpr_compliance": {
+    "data_minimization": true,
+    "purpose_limitation": true,
+    "consent_management": true,
+    "right_to_erasure": true,
+    "data_portability": true,
+    "privacy_by_design": true
+  },
+  "ccpa_compliance": {
+    "data_transparency": true,
+    "opt_out_rights": true,
+    "data_deletion": true,
+    "non_discrimination": true
+  },
+  "pdpa_compliance": {
+    "data_protection": true,
+    "consent_required": true,
+    "notification_obligations": true,
+    "cross_border_restrictions": true
+  },
+  "data_classification": {
+    "public": "No restrictions",
+    "internal": "Company personnel only",
+    "confidential": "Authorized personnel only",
+    "restricted": "Highest security level"
+  },
+  "encryption": {
+    "at_rest": "AES-256",
+    "in_transit": "TLS 1.3",
+    "key_management": "HSM-backed"
+  }
+}

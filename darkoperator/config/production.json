@@ -1,0 +1,38 @@
+{
+  "application": {
+    "name": "DarkOperator Studio",
+    "version": "1.0.0",
+    "environment": "production",
+    "debug": false
+  },
+  "localization": {
+    "default_language": "en",
+    "timezone": "UTC",
+    "date_format": "ISO-8601",
+    "number_format": "scientific"
+  },
+  "performance": {
+    "max_workers": 16,
+    "batch_size": 1000,
+    "cache_size_mb": 1024,
+    "timeout_seconds": 300
+  },
+  "security": {
+    "authentication_required": true,
+    "encryption_enabled": true,
+    "audit_logging": true,
+    "rate_limiting": true
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "health_checks": true,
+    "alerting": true
+  },
+  "compliance": {
+    "data_residency_required": true,
+    "privacy_controls": true,
+    "audit_trail": true,
+    "regulatory_reporting": true
+  }
+}
