@@ -1,6 +1,6 @@
 """Advanced logging and monitoring utilities."""
 
-import logging
+import logging as base_logging  # Avoid naming conflict
 import sys
 import time
 import json
@@ -21,8 +21,8 @@ class PhysicsLogger:
         self.log_dir.mkdir(parents=True, exist_ok=True)
         
         # Setup main logger
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.INFO)
+        self.logger = base_base_logging.getLogger(name)
+        self.logger.setLevel(base_base_logging.INFO)
         
         # Prevent duplicate handlers
         if not self.logger.handlers:
@@ -35,9 +35,9 @@ class PhysicsLogger:
     def _setup_handlers(self):
         """Setup logging handlers."""
         # Console handler
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.INFO)
-        console_format = logging.Formatter(
+        console_handler = base_logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(base_logging.INFO)
+        console_format = base_logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
         )
@@ -45,9 +45,9 @@ class PhysicsLogger:
         self.logger.addHandler(console_handler)
         
         # File handler for all logs
-        file_handler = logging.FileHandler(self.log_dir / f"{self.name}.log")
-        file_handler.setLevel(logging.DEBUG)
-        file_format = logging.Formatter(
+        file_handler = base_logging.FileHandler(self.log_dir / f"{self.name}.log")
+        file_handler.setLevel(base_logging.DEBUG)
+        file_format = base_logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
         )
@@ -55,8 +55,8 @@ class PhysicsLogger:
         self.logger.addHandler(file_handler)
         
         # Error handler for critical issues
-        error_handler = logging.FileHandler(self.log_dir / f"{self.name}_errors.log")
-        error_handler.setLevel(logging.ERROR)
+        error_handler = base_logging.FileHandler(self.log_dir / f"{self.name}_errors.log")
+        error_handler.setLevel(base_logging.ERROR)
         error_handler.setFormatter(file_format)
         self.logger.addHandler(error_handler)
     

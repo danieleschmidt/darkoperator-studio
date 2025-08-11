@@ -1,0 +1,80 @@
+{
+  "configuration": {
+    "dataset": "cms-jets-13tev-2016",
+    "max_events": 10000,
+    "alpha": 1e-06,
+    "batch_size": 32,
+    "device": "auto"
+  },
+  "operator_config": {
+    "model": "CalorimeterOperator",
+    "version": "cms-ecal-2024-v2",
+    "modes": 32,
+    "width": 64,
+    "output_shape": [
+      50,
+      50,
+      25
+    ],
+    "parameters": "2.3M"
+  },
+  "detector_config": {
+    "method": "Conformal Prediction",
+    "alpha": 1e-06,
+    "calibration_split": 0.5,
+    "statistical_guarantee": "99.9999% confidence"
+  },
+  "statistics": {
+    "total_events": 10000,
+    "calibration_events": 5000,
+    "test_events": 5000,
+    "anomalies_found": 1253,
+    "detection_rate": 0.2506,
+    "most_significant_p_value": 1.091161214765012e-49,
+    "significance_sigma": 21.235764840747944
+  },
+  "anomalous_events": [
+    {
+      "event_id": 0,
+      "p_value": 1.091161214765012e-49
+    },
+    {
+      "event_id": 1,
+      "p_value": 3.845207353078365e-39
+    },
+    {
+      "event_id": 2,
+      "p_value": 2.267378565343799e-34
+    },
+    {
+      "event_id": 3,
+      "p_value": 1.6288338848238658e-32
+    },
+    {
+      "event_id": 4,
+      "p_value": 1.8978940895560418e-32
+    },
+    {
+      "event_id": 5,
+      "p_value": 1.1615080957617335e-31
+    },
+    {
+      "event_id": 6,
+      "p_value": 5.200466067550566e-31
+    },
+    {
+      "event_id": 7,
+      "p_value": 1.4224035582956003e-29
+    },
+    {
+      "event_id": 8,
+      "p_value": 6.888958522972698e-29
+    },
+    {
+      "event_id": 9,
+      "p_value": 7.861675725734812e-29
+    }
+  ],
+  "timestamp": "2025-08-11 05:40:33",
+  "runtime_seconds": 6.5
+}
