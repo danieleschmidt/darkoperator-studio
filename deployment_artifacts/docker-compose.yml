@@ -1,0 +1,52 @@
+{
+  "version": "3.8",
+  "services": {
+    "darkoperator-api": {
+      "build": ".",
+      "ports": [
+        "8000:8000"
+      ],
+      "environment": {
+        "ENVIRONMENT": "production",
+        "TERRAGON_SDLC_VERSION": "4.0"
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "python",
+          "-c",
+          "import darkoperator"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "redis": {
+      "image": "redis:7-alpine",
+      "restart": "unless-stopped",
+      "ports": [
+        "6379:6379"
+      ]
+    },
+    "postgres": {
+      "image": "postgres:15-alpine",
+      "restart": "unless-stopped",
+      "environment": {
+        "POSTGRES_DB": "darkoperator",
+        "POSTGRES_USER": "darkoperator",
+        "POSTGRES_PASSWORD": "secure_password_here"
+      },
+      "ports": [
+        "5432:5432"
+      ],
+      "volumes": [
+        "postgres_data:/var/lib/postgresql/data"
+      ]
+    }
+  },
+  "volumes": {
+    "postgres_data": {}
+  }
+}
