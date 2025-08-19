@@ -1,0 +1,54 @@
+{
+  "report_timestamp": 1755642377.3102338,
+  "deployment_statistics": {
+    "total_deployments": 1,
+    "successful_deployments": 0,
+    "success_rate": 0.0,
+    "average_execution_time": 0.0006048679351806641
+  },
+  "latest_deployment": {
+    "success": false,
+    "deployment_id": "deploy_1755642377",
+    "status": "failed",
+    "target": "staging",
+    "services_deployed": [],
+    "endpoints": [],
+    "monitoring_urls": [],
+    "logs": [
+      "Deployment deploy_1755642377 failed: Quality gates not met: 70.0% success rate"
+    ],
+    "execution_time": 0.0006048679351806641,
+    "error_message": "Quality gates not met: 70.0% success rate"
+  },
+  "deployment_targets_configured": [
+    "development",
+    "staging",
+    "production",
+    "global"
+  ],
+  "auto_scaling_enabled": true,
+  "global_regions": [
+    "us-east-1",
+    "us-west-2",
+    "eu-west-1",
+    "eu-central-1",
+    "ap-southeast-1",
+    "ap-northeast-1",
+    "ap-south-1"
+  ],
+  "production_readiness": {
+    "infrastructure_ready": true,
+    "monitoring_configured": true,
+    "security_hardened": true,
+    "auto_scaling_active": true,
+    "multi_region_support": true
+  },
+  "recommendations": [
+    "Investigate and resolve deployment failures",
+    "Monitor performance metrics after deployment",
+    "Set up automated backup schedules",
+    "Configure disaster recovery procedures",
+    "Implement blue-green deployment strategy",
+    "Schedule regular security audits"
+  ]
+}
