@@ -1,0 +1,72 @@
+{
+  "parallel_processing_batch_32": {
+    "events_per_second": 44226.94719499135,
+    "processing_time": 0.005788326263427734,
+    "throughput": "44227 events/sec"
+  },
+  "parallel_processing_batch_64": {
+    "events_per_second": 209653.7779947281,
+    "processing_time": 0.0024421215057373047,
+    "throughput": "209654 events/sec"
+  },
+  "parallel_processing_batch_128": {
+    "events_per_second": 440554.6513488563,
+    "processing_time": 0.002324342727661133,
+    "throughput": "440555 events/sec"
+  },
+  "parallel_processing_batch_256": {
+    "events_per_second": 842067.894520145,
+    "processing_time": 0.002432107925415039,
+    "throughput": "842068 events/sec"
+  },
+  "tensor_ops_size_1000": {
+    "ops_per_second": 22488118.726945184,
+    "processing_time": 0.044467926025390625,
+    "energy_conservation": 390768.75
+  },
+  "tensor_ops_size_5000": {
+    "ops_per_second": 43048261.05430831,
+    "processing_time": 0.5807435512542725,
+    "energy_conservation": 9774913.0
+  },
+  "tensor_ops_size_10000": {
+    "ops_per_second": 42048396.46217563,
+    "processing_time": 2.3782119750976562,
+    "energy_conservation": 39106904.0
+  },
+  "cache_performance": {
+    "hit_rate": 0.9,
+    "avg_lookup_time_ms": 0.0015456676483154297,
+    "total_cached_items": 100
+  },
+  "anomaly_detection_size_1000": {
+    "events_per_second": 4277.972587873633,
+    "processing_time": 0.23375558853149414,
+    "true_anomalies": 50,
+    "detected_anomalies": 50,
+    "detection_rate": 1.0
+  },
+  "anomaly_detection_size_5000": {
+    "events_per_second": 16760.12067690955,
+    "processing_time": 0.2983272075653076,
+    "true_anomalies": 250,
+    "detected_anomalies": 250,
+    "detection_rate": 1.0
+  },
+  "anomaly_detection_size_10000": {
+    "events_per_second": 27447.657563918827,
+    "processing_time": 0.36432981491088867,
+    "true_anomalies": 500,
+    "detected_anomalies": 500,
+    "detection_rate": 1.0
+  },
+  "benchmark_metadata": {
+    "timestamp": "2025-08-20 17:28:47",
+    "cpu_count": 2,
+    "total_memory_gb": 3,
+    "python_version": "3.12",
+    "torch_version": "2.8.0+cpu",
+    "numpy_version": "1.26.4",
+    "device": "cpu"
+  }
+}

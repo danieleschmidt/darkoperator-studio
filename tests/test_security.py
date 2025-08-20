@@ -160,7 +160,7 @@ class TestPhysicsConstraints:
         momentum = 100.0
         energy = np.sqrt(momentum**2 + mass**2)
         
-        electron = torch.tensor([[[energy, momentum, 0.0, 0.0]]]))
+        electron = torch.tensor([[[energy, momentum, 0.0, 0.0]]])
         result = validate_4vectors(electron)
         
         # Should remain approximately unchanged for valid massive particle
