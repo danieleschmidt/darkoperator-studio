@@ -1,0 +1,32 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: darkoperator-studio
+  labels:
+    app: darkoperator-studio
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: darkoperator-studio
+  template:
+    metadata:
+      labels:
+        app: darkoperator-studio
+    spec:
+      containers:
+      - name: darkoperator
+        image: darkoperator:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests:
+            memory: "1Gi" 
+            cpu: "500m"
