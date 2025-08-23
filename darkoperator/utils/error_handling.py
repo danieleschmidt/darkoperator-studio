@@ -29,6 +29,27 @@ class DataValidationError(DarkOperatorError):
     pass
 
 
+class ValidationError(DarkOperatorError):
+    """General validation error."""
+    pass
+
+
+def safe_model_load(model_path: str, device: str = 'cpu'):
+    """Safely load a PyTorch model with validation."""
+    import os
+    import torch
+    
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+    
+    try:
+        model_data = torch.load(model_path, map_location=device)
+        logging.info(f"Model loaded successfully from {model_path}")
+        return model_data
+    except Exception as e:
+        raise ValidationError(f"Failed to load model: {e}")
+
+
 def safe_execute(func: Callable, *args, **kwargs) -> Tuple[Any, Optional[str]]:
     """Safely execute a function with error handling."""
     try:

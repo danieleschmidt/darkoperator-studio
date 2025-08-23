@@ -6,6 +6,20 @@ from typing import Dict, List, Tuple, Optional
 import matplotlib.pyplot as plt
 
 
+def generate_synthetic_events(n_events: int = 100, **kwargs) -> List[Dict]:
+    """Generate synthetic physics events for testing."""
+    events = []
+    for i in range(n_events):
+        event = {
+            'event_id': i,
+            'energy': float(np.random.exponential(100)),
+            'momentum': np.random.randn(3).tolist(),
+            'particles': np.random.randint(1, 10)
+        }
+        events.append(event)
+    return events
+
+
 def generate_background_events(
     n_events: int = 10000,
     energy_range: Tuple[float, float] = (10.0, 1000.0),

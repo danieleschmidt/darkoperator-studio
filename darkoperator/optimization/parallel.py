@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 class ParallelProcessor:
     """Parallel processor for CPU-intensive physics computations."""
     
-    def __init__(self, n_workers: Optional[int] = None, use_processes: bool = True):
-        self.n_workers = n_workers or mp.cpu_count()
+    def __init__(self, n_workers: Optional[int] = None, max_workers: Optional[int] = None, use_processes: bool = True):
+        # Support both parameter names for compatibility
+        workers = max_workers or n_workers or mp.cpu_count()
+        self.n_workers = workers
         self.use_processes = use_processes
         
         # Choose executor type

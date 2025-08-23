@@ -19,6 +19,36 @@ import pstats
 import io
 
 
+class PerformanceOptimizer:
+    """Main performance optimizer for DarkOperator."""
+    
+    def __init__(self, enable_profiling: bool = True):
+        self.enable_profiling = enable_profiling
+        self.profiler = PerformanceProfiler(enable_profiling)
+        self.optimizations_applied = []
+    
+    def optimize_model(self, model: torch.nn.Module) -> torch.nn.Module:
+        """Apply performance optimizations to a model."""
+        # Compile model if PyTorch 2.0+
+        try:
+            optimized_model = torch.compile(model)
+            self.optimizations_applied.append('torch_compile')
+        except AttributeError:
+            optimized_model = model
+            
+        # Set to eval mode for inference optimization
+        optimized_model.eval()
+        return optimized_model
+    
+    def get_optimization_report(self) -> Dict[str, Any]:
+        """Get performance optimization report."""
+        return {
+            'optimizations_applied': self.optimizations_applied,
+            'profiling_enabled': self.enable_profiling,
+            'memory_usage': psutil.virtual_memory()._asdict()
+        }
+
+
 class PerformanceProfiler:
     """Advanced profiler for neural operator performance analysis."""
     

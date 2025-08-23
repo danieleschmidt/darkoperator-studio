@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: darkoperator
+    version: v1.0.0
+  name: darkoperator-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: darkoperator
+  template:
+    metadata:
+      labels:
+        app: darkoperator
+    spec:
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: production
+        - name: LOG_LEVEL
+          value: INFO
+        - name: ENABLE_METRICS
+          value: 'true'
+        image: darkoperator:latest
+        name: darkoperator
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi

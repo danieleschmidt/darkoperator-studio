@@ -25,6 +25,42 @@ class MemoryStats:
     gpu_total_gb: Dict[int, float]
 
 
+class MemoryOptimizer:
+    """Memory optimization utilities."""
+    
+    def __init__(self):
+        self.cleanup_threshold = 0.9  # 90% memory usage triggers cleanup
+    
+    def cleanup_unused_memory(self):
+        """Cleanup unused memory."""
+        # Python garbage collection
+        gc.collect()
+        
+        # PyTorch cache cleanup
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        
+        logger.info("Memory cleanup completed")
+    
+    def get_memory_stats(self) -> Dict[str, float]:
+        """Get current memory statistics."""
+        memory = psutil.virtual_memory()
+        stats = {
+            'used_percent': memory.percent,
+            'used_gb': memory.used / (1024**3),
+            'total_gb': memory.total / (1024**3)
+        }
+        
+        if torch.cuda.is_available():
+            for i in range(torch.cuda.device_count()):
+                allocated = torch.cuda.memory_allocated(i) / (1024**3)
+                reserved = torch.cuda.memory_reserved(i) / (1024**3)
+                stats[f'gpu_{i}_allocated_gb'] = allocated
+                stats[f'gpu_{i}_reserved_gb'] = reserved
+        
+        return stats
+
+
 class MemoryManager:
     """Advanced memory management for large-scale physics computations."""
     
