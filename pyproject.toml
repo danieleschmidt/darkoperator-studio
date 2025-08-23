@@ -46,4 +46,4 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--cov=darkoperator --cov-report=html --cov-report=term-missing"
+addopts = "-v"

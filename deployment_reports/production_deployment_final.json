@@ -1,161 +1,77 @@
 {
-  "validation": {
-    "quality_gates": {
-      "passed": true,
-      "score": 89.0
-    },
-    "performance": {
-      "passed": true
-    },
-    "dependencies": {
-      "passed": true
-    },
-    "configuration": {
-      "passed": true
-    },
-    "all_checks_passed": true
-  },
-  "global_config": {
-    "regions": [
+  "deployment_id": "darkoperator-prod-1755984130",
+  "timestamp": "2025-08-23 21:22:10 UTC",
+  "version": "1.0.0",
+  "configuration": {
+    "global_regions": [
       {
         "name": "us-east-1",
-        "primary": true,
-        "status": "active"
+        "provider": "aws",
+        "priority": 1
       },
       {
         "name": "eu-west-1",
-        "primary": false,
-        "status": "standby"
+        "provider": "aws",
+        "priority": 2
       },
       {
-        "name": "ap-southeast-1",
-        "primary": false,
-        "status": "standby"
+        "name": "asia-pacific-1",
+        "provider": "aws",
+        "priority": 3
+      },
+      {
+        "name": "us-central1",
+        "provider": "gcp",
+        "priority": 4
       }
     ],
-    "localization": {
-      "supported_languages": [
-        "en",
-        "es",
-        "fr",
-        "de",
-        "ja",
-        "zh"
-      ],
-      "default_language": "en"
+    "scaling_config": {
+      "min_instances": 2,
+      "max_instances": 100,
+      "target_cpu_utilization": 70,
+      "target_memory_utilization": 80
     },
-    "compliance": {
-      "gdpr_enabled": true,
-      "ccpa_enabled": true,
-      "data_retention_days": 730
+    "monitoring_config": {
+      "enable_metrics": true,
+      "enable_logging": true,
+      "enable_tracing": true,
+      "alert_thresholds": {
+        "error_rate": 0.01,
+        "response_time_ms": 1000,
+        "memory_usage": 0.9
+      }
     }
   },
-  "regions": {
-    "regions": {
-      "us-east-1": {
-        "latency_ms": 50,
-        "capacity": "high",
-        "status": "ready"
-      },
-      "eu-west-1": {
-        "latency_ms": 75,
-        "capacity": "medium",
-        "status": "ready"
-      },
-      "ap-southeast-1": {
-        "latency_ms": 120,
-        "capacity": "medium",
-        "status": "ready"
-      }
-    },
-    "deployment_artifacts": "deployment_artifacts",
-    "k8s_manifests": 1,
-    "docker_configs": 1
-  },
-  "security": {
-    "encryption": {
-      "data_at_rest": "AES-256",
-      "data_in_transit": "TLS 1.3",
-      "key_management": "HSM"
-    },
-    "authentication": {
-      "methods": [
-        "OAuth2",
-        "SAML",
-        "API Keys"
-      ],
-      "mfa_required": true
-    },
-    "audit": {
-      "logging_enabled": true,
-      "retention_days": 365,
-      "real_time_monitoring": true
-    },
-    "compliance_frameworks": [
-      "GDPR",
-      "CCPA",
-      "SOC2",
-      "ISO27001"
-    ]
-  },
-  "monitoring": {
-    "metrics": {
-      "collection_interval": 30,
-      "retention_days": 90,
-      "alerts_enabled": true
-    },
-    "logging": {
-      "level": "INFO",
-      "centralized": true,
-      "structured": true
-    },
-    "tracing": {
-      "enabled": true,
-      "sampling_rate": 0.1
-    },
-    "dashboards": [
-      "System Health",
-      "Performance Metrics",
-      "Security Events",
-      "Business KPIs"
-    ]
-  },
-  "deployment": {
-    "success": true,
-    "total_deployment_time": 13.5,
-    "steps_completed": 6,
-    "steps_total": 6
-  },
-  "post_validation": {
-    "system_healthy": true,
-    "checks": {
-      "api_endpoints": {
-        "status": "healthy",
-        "response_time_ms": 150
-      },
-      "database_connectivity": {
-        "status": "healthy",
-        "connection_pool": "95%"
-      },
-      "cache_systems": {
-        "status": "healthy",
-        "hit_rate": "92%"
-      },
-      "external_services": {
-        "status": "healthy",
-        "all_responding": true
-      },
-      "monitoring_systems": {
-        "status": "healthy",
-        "alerts_configured": true
-      }
-    },
-    "timestamp": "2025-08-20 17:33:29"
-  },
-  "overall_status": {
-    "success": true,
-    "deployment_time": "2025-08-20 17:33:29",
-    "version": "0.1.0",
-    "environment": "production"
-  }
+  "artifacts_generated": true,
+  "validation_status": "PASSED",
+  "regions_configured": 4,
+  "scaling_enabled": true,
+  "monitoring_enabled": true,
+  "security_scanned": true,
+  "deployment_ready": true,
+  "terraform_configs": [
+    "main.tf",
+    "variables.tf"
+  ],
+  "k8s_manifests": [
+    "k8s_deployment_final.yaml"
+  ],
+  "docker_configs": [
+    "docker-compose-prod.yml"
+  ],
+  "monitoring_configs": [
+    "prometheus.yml",
+    "grafana_dashboard.json"
+  ],
+  "estimated_deployment_time": "15-30 minutes",
+  "estimated_cost_per_month": "$500-2000 (depending on usage)",
+  "recommended_next_steps": [
+    "1. Review and customize Terraform variables",
+    "2. Deploy infrastructure: terraform apply",
+    "3. Build and push Docker image",
+    "4. Apply Kubernetes manifests: kubectl apply -f",
+    "5. Configure monitoring and alerting",
+    "6. Run end-to-end tests",
+    "7. Enable production traffic"
+  ]
 }

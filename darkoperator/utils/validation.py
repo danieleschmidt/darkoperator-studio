@@ -2,7 +2,8 @@
 
 import torch
 import numpy as np
-from typing import Union, Tuple, Optional
+import psutil
+from typing import Union, Tuple, Optional, Dict, Any
 import logging
 
 
@@ -12,6 +13,102 @@ logger = logging.getLogger(__name__)
 class ValidationError(Exception):
     """Custom exception for validation errors."""
     pass
+
+
+def validate_tensor_shape(tensor: torch.Tensor, expected_dims: int, 
+                         expected_shape: Optional[Tuple[int, ...]] = None) -> bool:
+    """Validate tensor shape and dimensionality."""
+    if tensor.dim() != expected_dims:
+        logger.error(f"Expected {expected_dims}D tensor, got {tensor.dim()}D")
+        return False
+    
+    if expected_shape and tensor.shape != expected_shape:
+        logger.error(f"Expected shape {expected_shape}, got {tensor.shape}")
+        return False
+    
+    return True
+
+
+def validate_physics_constraints(four_vector: torch.Tensor) -> bool:
+    """Validate physics constraints for 4-vectors."""
+    if four_vector.shape[-1] != 4:
+        logger.error("Physics validation requires 4-vector input")
+        return False
+    
+    # Check energy-momentum relation: E^2 >= p^2
+    energy = four_vector[..., 0]
+    momentum_sq = torch.sum(four_vector[..., 1:] ** 2, dim=-1)
+    
+    if torch.any(energy ** 2 < momentum_sq - 1e-6):  # Small tolerance
+        logger.warning("Energy-momentum constraint violated")
+        return False
+    
+    return True
+
+
+def system_health_check() -> Dict[str, Any]:
+    """Perform comprehensive system health check."""
+    health = {
+        'status': 'healthy',
+        'checks': {},
+        'warnings': [],
+        'errors': []
+    }
+    
+    # Memory check
+    memory = psutil.virtual_memory()
+    health['checks']['memory_usage'] = memory.percent
+    if memory.percent > 90:
+        health['errors'].append("High memory usage")
+        health['status'] = 'error'
+    elif memory.percent > 75:
+        health['warnings'].append("Elevated memory usage")
+        health['status'] = 'warning'
+    
+    # Disk space check
+    disk = psutil.disk_usage('/')
+    disk_percent = (disk.used / disk.total) * 100
+    health['checks']['disk_usage'] = disk_percent
+    if disk_percent > 95:
+        health['errors'].append("Low disk space")
+        health['status'] = 'error'
+    
+    # PyTorch availability
+    try:
+        import torch
+        health['checks']['pytorch'] = torch.__version__
+        health['checks']['cuda_available'] = torch.cuda.is_available()
+    except ImportError:
+        health['errors'].append("PyTorch not available")
+        health['status'] = 'error'
+    
+    return health
+
+
+def validate_config(config: Dict[str, Any]) -> bool:
+    """Validate configuration structure and values."""
+    if not isinstance(config, dict):
+        return False
+    
+    # Check required sections
+    required_sections = ['model', 'training']
+    for section in required_sections:
+        if section not in config:
+            logger.warning(f"Missing configuration section: {section}")
+            return False
+    
+    # Validate model config
+    model_config = config.get('model', {})
+    if 'name' not in model_config:
+        logger.error("Model name required in configuration")
+        return False
+    
+    # Validate training config  
+    training_config = config.get('training', {})
+    if 'epochs' not in training_config:
+        logger.warning("Epochs not specified in training config")
+    
+    return True
 
 
 def validate_4vectors(x: Union[torch.Tensor, np.ndarray]) -> torch.Tensor:

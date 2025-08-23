@@ -40,6 +40,45 @@ class ResourceMetrics:
     timestamp: float
 
 
+class AutoScaler:
+    """Auto-scaling controller for distributed physics simulations."""
+    
+    def __init__(self, min_workers: int = 1, max_workers: int = 8, 
+                 target_utilization: float = 0.75, scale_up_threshold: float = 0.8,
+                 scale_down_threshold: float = 0.3):
+        self.min_workers = min_workers
+        self.max_workers = max_workers
+        self.target_utilization = target_utilization
+        self.scale_up_threshold = scale_up_threshold
+        self.scale_down_threshold = scale_down_threshold
+        self.current_workers = min_workers
+        
+    def should_scale(self, current_load: float, current_workers: int) -> Optional[str]:
+        """Determine if scaling action is needed."""
+        self.current_workers = current_workers
+        
+        if current_load > self.scale_up_threshold and current_workers < self.max_workers:
+            return 'scale_up'
+        elif current_load < self.scale_down_threshold and current_workers > self.min_workers:
+            return 'scale_down'
+        else:
+            return None
+    
+    def scale_up(self) -> int:
+        """Scale up workers."""
+        new_workers = min(self.current_workers + 1, self.max_workers)
+        logger.info(f"Scaling up from {self.current_workers} to {new_workers} workers")
+        self.current_workers = new_workers
+        return new_workers
+    
+    def scale_down(self) -> int:
+        """Scale down workers."""
+        new_workers = max(self.current_workers - 1, self.min_workers)
+        logger.info(f"Scaling down from {self.current_workers} to {new_workers} workers")
+        self.current_workers = new_workers
+        return new_workers
+
+
 @dataclass
 class WorkerConfig:
     """Configuration for distributed workers."""

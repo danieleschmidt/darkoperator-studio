@@ -1,38 +1,58 @@
 {
   "dashboard": {
     "id": null,
-    "title": "DarkOperator Production Dashboard",
+    "title": "DarkOperator Production Metrics",
+    "tags": [
+      "darkoperator",
+      "production"
+    ],
+    "timezone": "browser",
     "panels": [
       {
-        "title": "Event Processing Rate",
+        "id": 1,
+        "title": "Request Rate (req/sec)",
         "type": "graph",
         "targets": [
           {
-            "expr": "rate(darkoperator_events_processed_total[5m])"
+            "expr": "rate(http_requests_total[5m])"
           }
         ]
       },
       {
-        "title": "Anomaly Detection Rate",
+        "id": 2,
+        "title": "Response Time (ms)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Error Rate (%)",
         "type": "stat",
         "targets": [
           {
-            "expr": "darkoperator_anomalies_detected_total"
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m])"
           }
         ]
       },
       {
-        "title": "System Resources",
-        "type": "graph",
+        "id": 4,
+        "title": "Memory Usage",
+        "type": "gauge",
         "targets": [
           {
             "expr": "process_resident_memory_bytes"
-          },
-          {
-            "expr": "rate(process_cpu_seconds_total[5m])"
           }
         ]
       }
-    ]
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s"
   }
 }

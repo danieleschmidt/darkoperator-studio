@@ -12,6 +12,27 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def load_config(config_path: Optional[str] = None) -> Dict[str, Any]:
+    """Load configuration from file or defaults."""
+    if config_path and os.path.exists(config_path):
+        with open(config_path, 'r') as f:
+            if config_path.endswith('.yaml') or config_path.endswith('.yml'):
+                return yaml.safe_load(f)
+            elif config_path.endswith('.json'):
+                return json.load(f)
+    return {}
+
+
+def validate_config(config: Dict[str, Any]) -> bool:
+    """Validate configuration structure."""
+    required_sections = ['model', 'training']
+    for section in required_sections:
+        if section not in config:
+            logger.warning(f"Missing configuration section: {section}")
+            return False
+    return True
+
+
 @dataclass
 class SecurityConfig:
     """Security configuration settings."""

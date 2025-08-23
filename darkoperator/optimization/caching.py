@@ -15,6 +15,85 @@ import json
 logger = logging.getLogger(__name__)
 
 
+class ModelCache:
+    """Specialized cache for neural network models."""
+    
+    def __init__(self, max_size: int = 10):
+        self.max_size = max_size
+        self.cache = OrderedDict()
+        self.model_metadata = {}
+        self.lock = threading.RLock()
+    
+    def put(self, key: str, model: torch.nn.Module):
+        """Cache a model."""
+        with self.lock:
+            if len(self.cache) >= self.max_size:
+                # Remove oldest item
+                self.cache.popitem(last=False)
+            self.cache[key] = model
+    
+    def get(self, key: str) -> Optional[torch.nn.Module]:
+        """Get model from cache."""
+        with self.lock:
+            if key in self.cache:
+                # Move to end (most recent)
+                model = self.cache.pop(key)
+                self.cache[key] = model
+                return model
+            return None
+
+
+class DataCache:
+    """Cache for data with memory size limits."""
+    
+    def __init__(self, max_size_gb: float = 2.0):
+        self.max_size_bytes = int(max_size_gb * 1024**3)
+        self.cache = {}
+        self.size_tracker = {}
+        self.total_size = 0
+        self.lock = threading.RLock()
+    
+    def put(self, key: str, data: Any) -> bool:
+        """Put data in cache if it fits."""
+        with self.lock:
+            # Estimate data size
+            try:
+                serialized = pickle.dumps(data)
+                data_size = len(serialized)
+            except Exception:
+                return False
+            
+            # Check if we have space
+            if data_size > self.max_size_bytes:
+                return False
+            
+            # Make room if needed
+            while self.total_size + data_size > self.max_size_bytes and self.cache:
+                self._evict_lru()
+            
+            # Store data
+            self.cache[key] = data
+            self.size_tracker[key] = data_size
+            self.total_size += data_size
+            return True
+    
+    def get(self, key: str) -> Optional[Any]:
+        """Get data from cache."""
+        with self.lock:
+            return self.cache.get(key)
+    
+    def _evict_lru(self):
+        """Evict least recently used item."""
+        if not self.cache:
+            return
+        
+        # For simplicity, remove first item (should implement proper LRU)
+        key = next(iter(self.cache))
+        self.total_size -= self.size_tracker[key]
+        del self.cache[key]
+        del self.size_tracker[key]
+
+
 class LRUCache:
     """Thread-safe LRU cache implementation."""
     

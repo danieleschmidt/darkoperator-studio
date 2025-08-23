@@ -12,6 +12,30 @@ import psutil
 import torch
 
 
+def setup_logging(level='INFO', log_file=None):
+    """Setup basic logging configuration."""
+    log_level = getattr(base_logging, level.upper(), base_logging.INFO)
+    
+    format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    
+    if log_file:
+        base_logging.basicConfig(
+            level=log_level,
+            format=format_string,
+            handlers=[
+                base_logging.FileHandler(log_file),
+                base_logging.StreamHandler()
+            ]
+        )
+    else:
+        base_logging.basicConfig(level=log_level, format=format_string)
+
+
+def get_logger(name: str):
+    """Get a logger instance."""
+    return base_logging.getLogger(name)
+
+
 class PhysicsLogger:
     """Enhanced logger for physics computations with performance monitoring."""
     
@@ -21,8 +45,8 @@ class PhysicsLogger:
         self.log_dir.mkdir(parents=True, exist_ok=True)
         
         # Setup main logger
-        self.logger = base_base_logging.getLogger(name)
-        self.logger.setLevel(base_base_logging.INFO)
+        self.logger = base_logging.getLogger(name)
+        self.logger.setLevel(base_logging.INFO)
         
         # Prevent duplicate handlers
         if not self.logger.handlers:
