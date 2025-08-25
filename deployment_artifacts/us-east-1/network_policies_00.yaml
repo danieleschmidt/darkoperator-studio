@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: darkoperator-network-policy
+  namespace: darkoperator-us-east-1
+spec:
+  podSelector:
+    matchLabels:
+      app: darkoperator
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - 
+      from:
+        - 
+          podSelector:
+            matchLabels:
+              app: darkoperator
+      ports:
+        - 
+          protocol: TCP
+          port: 8080
+  egress:
+    - 
+      to:
+        - 
+
+      ports:
+        - 
+          protocol: TCP
+          port: 443
+        - 
+          protocol: TCP
+          port: 5432

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: darkoperator-anomaly-detection-service
+  namespace: darkoperator-cern-geneva
+  labels:
+    app: darkoperator
+    service: anomaly-detection-service
+spec:
+  selector:
+    app: darkoperator
+    service: anomaly-detection-service
+  ports:
+    - 
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: darkoperator-data-processing-service
+  namespace: darkoperator-ap-southeast-1
+  labels:
+    app: darkoperator
+    service: data-processing-service
+spec:
+  selector:
+    app: darkoperator
+    service: data-processing-service
+  ports:
+    - 
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

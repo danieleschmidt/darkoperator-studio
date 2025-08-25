@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: darkoperator-cern-geneva
+  labels:
+    app: darkoperator
+    region: cern-geneva
+    environment: production
