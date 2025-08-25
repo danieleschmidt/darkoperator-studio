@@ -1,16 +1,22 @@
 {
-  "timestamp": "2025-08-11 08:25:03",
-  "test_results": {
-    "error_handling": "FAILED - No module named 'numpy'",
-    "input_validation": "FAILED - cannot access free variable 'np' where it is not associated with a value in enclosing scope",
-    "security": "PASSED",
-    "retry_mechanism": "PASSED",
-    "logging": "PASSED"
+  "generation": 2,
+  "test_type": "robustness",
+  "timestamp": "2025-08-25 01:46:05",
+  "execution_time_seconds": 0.15976428985595703,
+  "summary": {
+    "total_suites": 2,
+    "passed_suites": 2,
+    "failed_suites": 0,
+    "success_rate": 1.0
   },
-  "robustness_score": 25,
-  "security_score": 25,
-  "reliability_score": 25,
-  "overall_score": 25.0,
-  "pass_rate": 60.0,
-  "generation_2_status": "PARTIAL"
+  "detailed_results": {
+    "Enhanced Error Handling": {
+      "passed": true,
+      "error": null
+    },
+    "Advanced Monitoring": {
+      "passed": true,
+      "error": null
+    }
+  }
 }
