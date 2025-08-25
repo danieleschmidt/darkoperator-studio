@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: darkoperator-data-processing-service
+  namespace: darkoperator-us-east-1
+  labels:
+    app: darkoperator
+    service: data-processing-service
+    region: us-east-1
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: darkoperator
+      service: data-processing-service
+  template:
+    metadata:
+      labels:
+        app: darkoperator
+        service: data-processing-service
+        region: us-east-1
+    spec:
+      containers:
+        - 
+          name: data-processing-service
+          image: darkoperator/production:v1.0.0-stable
+          ports:
+            - 
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+              gpu: 1
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          env:
+            - 
+              name: ENVIRONMENT
+              value: production
+            - 
+              name: REGION
+              value: us-east-1
+            - 
+              name: SERVICE_NAME
+              value: data-processing-service
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      imagePullPolicy: Always

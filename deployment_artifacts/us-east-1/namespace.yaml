@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: darkoperator-us-east-1
+  labels:
+    app: darkoperator
+    region: us-east-1
+    environment: production
