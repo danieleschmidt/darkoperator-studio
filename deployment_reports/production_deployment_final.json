@@ -1,47 +1,7 @@
 {
-  "deployment_id": "darkoperator-prod-1755984130",
-  "timestamp": "2025-08-23 21:22:10 UTC",
+  "deployment_id": "darkoperator-prod-1756171283",
+  "timestamp": "2025-08-26 01:21:23 UTC",
   "version": "1.0.0",
-  "configuration": {
-    "global_regions": [
-      {
-        "name": "us-east-1",
-        "provider": "aws",
-        "priority": 1
-      },
-      {
-        "name": "eu-west-1",
-        "provider": "aws",
-        "priority": 2
-      },
-      {
-        "name": "asia-pacific-1",
-        "provider": "aws",
-        "priority": 3
-      },
-      {
-        "name": "us-central1",
-        "provider": "gcp",
-        "priority": 4
-      }
-    ],
-    "scaling_config": {
-      "min_instances": 2,
-      "max_instances": 100,
-      "target_cpu_utilization": 70,
-      "target_memory_utilization": 80
-    },
-    "monitoring_config": {
-      "enable_metrics": true,
-      "enable_logging": true,
-      "enable_tracing": true,
-      "alert_thresholds": {
-        "error_rate": 0.01,
-        "response_time_ms": 1000,
-        "memory_usage": 0.9
-      }
-    }
-  },
   "artifacts_generated": true,
   "validation_status": "PASSED",
   "regions_configured": 4,
@@ -49,29 +9,6 @@
   "monitoring_enabled": true,
   "security_scanned": true,
   "deployment_ready": true,
-  "terraform_configs": [
-    "main.tf",
-    "variables.tf"
-  ],
-  "k8s_manifests": [
-    "k8s_deployment_final.yaml"
-  ],
-  "docker_configs": [
-    "docker-compose-prod.yml"
-  ],
-  "monitoring_configs": [
-    "prometheus.yml",
-    "grafana_dashboard.json"
-  ],
   "estimated_deployment_time": "15-30 minutes",
-  "estimated_cost_per_month": "$500-2000 (depending on usage)",
-  "recommended_next_steps": [
-    "1. Review and customize Terraform variables",
-    "2. Deploy infrastructure: terraform apply",
-    "3. Build and push Docker image",
-    "4. Apply Kubernetes manifests: kubectl apply -f",
-    "5. Configure monitoring and alerting",
-    "6. Run end-to-end tests",
-    "7. Enable production traffic"
-  ]
+  "estimated_cost_per_month": "00-2000 (depending on usage)"
 }
