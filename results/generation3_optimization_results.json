@@ -1,8 +1,8 @@
 {
   "generation": 3,
   "status": "COMPLETED",
-  "completion_time": 1.3942835330963135,
-  "timestamp": "2025-08-25T23:34:37.510587",
+  "completion_time": 1.4294226169586182,
+  "timestamp": "2025-08-26T01:20:27.185312",
   "scaling_features": {
     "intelligent_caching": {
       "physics_aware_invalidation": true,
@@ -39,7 +39,7 @@
   },
   "scalability_metrics": {
     "max_concurrent_operations": 1000,
-    "peak_throughput_ops_per_sec": 727.3014805078603,
+    "peak_throughput_ops_per_sec": 709.8356732745085,
     "resource_utilization_efficiency": 0.92,
     "auto_scaling_accuracy": 0.88,
     "fault_tolerance_level": "HIGH"
@@ -48,16 +48,16 @@
     "simulation_results": {
       "total_events_processed": 1000,
       "neural_operator_results": 500,
-      "anomalies_detected": 35,
-      "total_processing_time": 1.3749456405639648,
-      "overall_throughput": 727.3014805078603
+      "anomalies_detected": 54,
+      "total_processing_time": 1.4087767601013184,
+      "overall_throughput": 709.8356732745085
     },
     "performance_analytics": {
       "performance_summary": {
         "total_operations": 1,
         "recent_operations": 1,
-        "average_execution_time": 0.863292932510376,
-        "average_throughput": 579.177682534764,
+        "average_execution_time": 0.8978240489959717,
+        "average_throughput": 556.9019904948474,
         "average_cache_hit_rate": 0.0,
         "active_operations": 0
       },
@@ -70,10 +70,10 @@
         "hit_rate": 0.0,
         "hit_count": 0,
         "miss_count": 1,
-        "cache_size_mb": 0.3205585479736328,
+        "cache_size_mb": 0.3204622268676758,
         "entry_count": 1,
         "utilization": {
-          "size_percent": 0.03205585479736328,
+          "size_percent": 0.03204622268676758,
           "entries_percent": 0.01
         }
       }
@@ -87,10 +87,10 @@
       "hit_rate": 0.0,
       "hit_count": 0,
       "miss_count": 1,
-      "cache_size_mb": 0.3205585479736328,
+      "cache_size_mb": 0.3204622268676758,
       "entry_count": 1,
       "utilization": {
-        "size_percent": 0.03205585479736328,
+        "size_percent": 0.03204622268676758,
         "entries_percent": 0.01
       }
     }

@@ -1,9 +1,9 @@
 {
-  "overall_status": "PASS",
-  "overall_score": 95.0,
+  "overall_status": "FAIL",
+  "overall_score": 90.41666666666667,
   "quality_gates": {
     "code_quality": {
-      "status": "PASS",
+      "status": "FAIL",
       "checks": {
         "project_structure": {
           "status": "PASS",
@@ -13,7 +13,7 @@
         },
         "code_organization": {
           "status": "PASS",
-          "total_python_files": 105,
+          "total_python_files": 156,
           "expected_modules": [
             "models",
             "operators",
@@ -41,8 +41,8 @@
         "documentation": {
           "status": "PASS",
           "documentation_coverage": 100.0,
-          "documented_files": 75,
-          "total_files": 75,
+          "documented_files": 102,
+          "total_files": 102,
           "important_docs_present": [
             "README.md",
             "CONTRIBUTING.md",
@@ -50,22 +50,46 @@
           ]
         },
         "complexity": {
-          "status": "PASS",
-          "total_lines_of_code": 27496,
-          "total_functions": 983,
-          "average_file_size": 366.61333333333334,
+          "status": "WARN",
+          "total_lines_of_code": 48389,
+          "total_functions": 1603,
+          "average_file_size": 474.4019607843137,
           "large_files": [
             {
               "file": "darkoperator/deployment/global_config.py",
               "lines": 1212
+            },
+            {
+              "file": "darkoperator/research/comprehensive_research_validation.py",
+              "lines": 1242
+            },
+            {
+              "file": "darkoperator/research/conservation_aware_attention.py",
+              "lines": 1119
+            },
+            {
+              "file": "darkoperator/research/experimental_validation_suite.py",
+              "lines": 1100
+            },
+            {
+              "file": "darkoperator/research/physics_informed_conformal_detection.py",
+              "lines": 1295
+            },
+            {
+              "file": "darkoperator/research/quantum_classical_bridge_operators.py",
+              "lines": 1022
+            },
+            {
+              "file": "darkoperator/research/relativistic_neural_operators.py",
+              "lines": 1315
             }
           ],
-          "complexity_score": 90
+          "complexity_score": 30
         }
       },
       "metrics": {
-        "quality_score": 100.0,
-        "checks_passed": "4/4"
+        "quality_score": 75.0,
+        "checks_passed": "3/4"
       },
       "issues": []
     },
@@ -79,8 +103,12 @@
         },
         "imports": {
           "status": "WARN",
-          "risky_imports_found": 35,
+          "risky_imports_found": 62,
           "risky_imports": [
+            {
+              "file": "darkoperator/__init__.py",
+              "import": "__import__"
+            },
             {
               "file": "darkoperator/anomaly/conformal.py",
               "import": "eval"
@@ -94,7 +122,35 @@
               "import": "eval"
             },
             {
+              "file": "darkoperator/cli/main.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/core/__init__.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/core/autonomous_executor.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/deployment/autonomous_production_scaler.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/deployment/autonomous_production_scaler.py",
+              "import": "exec"
+            },
+            {
               "file": "darkoperator/deployment/production_deployment.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/deployment/production_ready_deployment.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/deployment/production_ready_deployment.py",
               "import": "exec"
             },
             {
@@ -106,6 +162,14 @@
               "import": "exec"
             },
             {
+              "file": "darkoperator/distributed/intelligent_scaling.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/distributed/intelligent_scaling.py",
+              "import": "exec"
+            },
+            {
               "file": "darkoperator/hub/downloader.py",
               "import": "eval"
             },
@@ -114,7 +178,23 @@
               "import": "exec"
             },
             {
+              "file": "darkoperator/monitoring/advanced_performance_monitor.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/monitoring/advanced_performance_monitor.py",
+              "import": "exec"
+            },
+            {
               "file": "darkoperator/monitoring/quantum_metrics.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/optimization/adaptive_performance_optimizer.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/optimization/high_performance_scaling.py",
               "import": "exec"
             },
             {
@@ -146,7 +226,7 @@
               "import": "exec"
             },
             {
-              "file": "darkoperator/optimization/high_performance_scaling.py",
+              "file": "darkoperator/optimization/quantum_performance_accelerator.py",
               "import": "exec"
             },
             {
@@ -170,6 +250,62 @@
               "import": "exec"
             },
             {
+              "file": "darkoperator/research/ads_cft_experimental_validation.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/comprehensive_research_validation.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/comprehensive_validation_benchmark.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/experimental_validation_suite.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/physics_informed_conformal_detection.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/physics_informed_quantum_circuits.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/quantum_classical_bridge_operators.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/research/relativistic_neural_operators.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/validation_benchmarks.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/research/validation_benchmarks.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/security/enhanced_security_scanner.py",
+              "import": "eval"
+            },
+            {
+              "file": "darkoperator/security/enhanced_security_scanner.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/security/enhanced_security_scanner.py",
+              "import": "os.system"
+            },
+            {
+              "file": "darkoperator/security/enhanced_security_scanner.py",
+              "import": "__import__"
+            },
+            {
               "file": "darkoperator/security/model_security.py",
               "import": "exec"
             },
@@ -190,6 +326,14 @@
               "import": "__import__"
             },
             {
+              "file": "darkoperator/security/quantum_security_framework.py",
+              "import": "exec"
+            },
+            {
+              "file": "darkoperator/utils/advanced_error_handling.py",
+              "import": "exec"
+            },
+            {
               "file": "darkoperator/utils/error_handling.py",
               "import": "exec"
             },
@@ -198,27 +342,15 @@
               "import": "exec"
             },
             {
+              "file": "darkoperator/utils/robust_error_handling.py",
+              "import": "exec"
+            },
+            {
               "file": "darkoperator/utils/training.py",
               "import": "eval"
             },
             {
               "file": "darkoperator/utils/validation.py",
-              "import": "exec"
-            },
-            {
-              "file": "darkoperator/utils/robust_error_handling.py",
-              "import": "exec"
-            },
-            {
-              "file": "darkoperator/research/physics_informed_quantum_circuits.py",
-              "import": "eval"
-            },
-            {
-              "file": "darkoperator/research/validation_benchmarks.py",
-              "import": "eval"
-            },
-            {
-              "file": "darkoperator/research/validation_benchmarks.py",
               "import": "exec"
             }
           ]
@@ -229,13 +361,13 @@
           "issues": []
         },
         "security_patterns": {
-          "status": "WARN",
+          "status": "PASS",
           "security_patterns": {
-            "input_validation": 26,
-            "error_handling": 36,
-            "logging_security": 36
+            "input_validation": 43,
+            "error_handling": 62,
+            "logging_security": 59
           },
-          "pattern_score": 65.33333333333333
+          "pattern_score": 80.3921568627451
         }
       },
       "vulnerabilities": [],
@@ -381,13 +513,13 @@
           "statistical_testing": true,
           "baseline_comparisons": true,
           "ablation_studies": false,
-          "error_analysis": false,
+          "error_analysis": true,
           "reproducible_experiments": true
         },
-        "score": 60.0,
+        "score": 80.0,
         "status": "PASS"
       },
-      "publication_score": 80.0,
+      "publication_score": 86.66666666666667,
       "reproducibility": {
         "reproducibility_elements": {
           "version_control": true,
@@ -403,13 +535,17 @@
   },
   "summary": {
     "total_gates": 6,
-    "passed_gates": 6,
-    "failed_gates": 0,
-    "critical_failures": [],
+    "passed_gates": 5,
+    "failed_gates": 1,
+    "critical_failures": [
+      "Code quality score 75.0% < 85%"
+    ],
     "warnings": []
   },
-  "recommendations": [],
-  "deployment_ready": true,
-  "publication_ready": true,
-  "timestamp": 1755036289.1478682
+  "recommendations": [
+    "Improve code quality by addressing documentation and complexity issues"
+  ],
+  "deployment_ready": false,
+  "publication_ready": false,
+  "timestamp": 1756171241.251113
 }
