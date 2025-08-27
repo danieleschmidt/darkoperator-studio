@@ -1,0 +1,30 @@
+{
+  "execution_time": 0.03161740303039551,
+  "results": [
+    "QualityGateResult(gate_type=<QualityGateType.STRUCTURE_VALIDATION: 'structure_validation'>, passed=True, score=1.0, details={'expected_files': 6, 'found_files': 6, 'expected_directories': 4, 'found_directories': 4, 'structure_details': [{'type': 'file', 'path': 'README.md', 'status': 'found', 'size_bytes': 9733}, {'type': 'file', 'path': 'setup.py', 'status': 'found', 'size_bytes': 2067}, {'type': 'file', 'path': 'pyproject.toml', 'status': 'found', 'size_bytes': 1411}, {'type': 'file', 'path': 'requirements.txt', 'status': 'found', 'size_bytes': 248}, {'type': 'file', 'path': 'environment.yml', 'status': 'found', 'size_bytes': 765}, {'type': 'file', 'path': 'LICENSE', 'status': 'found', 'size_bytes': 1071}, {'type': 'directory', 'path': 'darkoperator', 'status': 'found', 'file_count': 1}, {'type': 'directory', 'path': 'tests', 'status': 'found', 'file_count': 8}, {'type': 'directory', 'path': 'docs', 'status': 'found', 'file_count': 1}, {'type': 'directory', 'path': 'examples', 'status': 'found', 'file_count': 5}]}, execution_time=0.00042748451232910156, timestamp=datetime.datetime(2025, 8, 27, 11, 57, 58, 340852), error_message=None)",
+    "QualityGateResult(gate_type=<QualityGateType.CODE_ANALYSIS: 'code_analysis'>, passed=True, score=0.8710886644219977, details={'python_files_analyzed': 10, 'total_lines': 2064, 'docstring_coverage': 0.7530864197530864, 'avg_function_length': 20.37037037037037, 'quality_metrics': []}, execution_time=0.0030562877655029297, timestamp=datetime.datetime(2025, 8, 27, 11, 57, 58, 343911), error_message=None)",
+    "QualityGateResult(gate_type=<QualityGateType.DOCUMENTATION_CHECK: 'documentation_check'>, passed=True, score=0.875, details={'readme_score': 0.75, 'docstring_presence': 0.0, 'examples_present': True, 'docs_directory_present': True, 'documentation_details': [{'type': 'README', 'sections_found': 6, 'total_sections': 8, 'word_count': 1016}, {'type': 'examples', 'file_count': 4}]}, execution_time=0.0010929107666015625, timestamp=datetime.datetime(2025, 8, 27, 11, 57, 58, 344998), error_message=None)",
+    "QualityGateResult(gate_type=<QualityGateType.SECURITY_BASICS: 'security_basics'>, passed=False, score=0.6666666666666666, details={'checks_performed': 3, 'checks_passed': 2, 'security_details': [{'check': 'gitignore_security', 'passed': True, 'patterns_found': 4, 'total_patterns': 5}, {'check': 'hardcoded_secrets', 'passed': False, 'secrets_found': 1, 'files_scanned': 50}, {'check': 'requirements_security', 'passed': True, 'details': 'basic_vulnerability_check'}]}, execution_time=0.026804685592651367, timestamp=datetime.datetime(2025, 8, 27, 11, 57, 58, 371848), error_message=None)",
+    "QualityGateResult(gate_type=<QualityGateType.DEPENDENCY_CHECK: 'dependency_check'>, passed=True, score=1.0, details={'management_files': 4, 'expected_files': 4, 'dependency_details': [{'file': 'requirements.txt', 'type': 'pip_requirements', 'present': True, 'dependency_count': 17, 'file_size': 248}, {'file': 'environment.yml', 'type': 'conda_environment', 'present': True, 'dependency_count': 33, 'file_size': 765}, {'file': 'pyproject.toml', 'type': 'modern_python_project', 'present': True, 'dependency_count': 3, 'file_size': 1411}, {'file': 'setup.py', 'type': 'traditional_setup', 'present': True, 'dependency_count': 26, 'file_size': 2067}]}, execution_time=0.000164031982421875, timestamp=datetime.datetime(2025, 8, 27, 11, 57, 58, 372037), error_message=None)"
+  ],
+  "analysis": {
+    "overall_passed": true,
+    "overall_score": 0.8825510662177329,
+    "gates_passed": 4,
+    "total_gates": 5,
+    "pass_rate": 0.8,
+    "critical_failures": [],
+    "recommendations": [
+      "Address basic security issues"
+    ],
+    "gate_scores": {
+      "structure_validation": 1.0,
+      "code_analysis": 0.8710886644219977,
+      "documentation_check": 0.875,
+      "security_basics": 0.6666666666666666,
+      "dependency_check": 1.0
+    }
+  },
+  "quality_gates_passed": true,
+  "timestamp": "2025-08-27T11:57:58.372071"
+}
