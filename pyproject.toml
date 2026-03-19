@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "darkoperator"
-description = "Neural Operators for Ultra-Rare Dark Matter Detection"
-authors = [{name = "Daniel Schmidt", email = "daniel@terragonlabs.com"}]
-license = {text = "MIT"}
+description = "Neural operator surrogates for 1-D physics simulations with conformal anomaly detection"
+authors = [{name = "Daniel Schmidt", email = "daniel@danielschmidt.dev"}]
+license = {text = "GPL-3.0"}
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["physics", "machine-learning", "neural-operators", "dark-matter", "lhc"]

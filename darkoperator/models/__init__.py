@@ -1,11 +1,3 @@
-"""Neural network models for operator learning."""
+from darkoperator.models.fno1d import FourierNeuralOperator1d, FNOBlock1d, SpectralConv1d
 
-from .fno import FourierNeuralOperator, SpectralConv3d
-from .autoencoder import VariationalAutoencoder, ConvolutionalAutoencoder
-
-__all__ = [
-    "FourierNeuralOperator",
-    "SpectralConv3d", 
-    "VariationalAutoencoder",
-    "ConvolutionalAutoencoder",
-]
+__all__ = ["FourierNeuralOperator1d", "FNOBlock1d", "SpectralConv1d"]

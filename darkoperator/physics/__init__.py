@@ -1,6 +1,3 @@
-"""Physics-informed components and embeddings."""
+from darkoperator.physics.pde_data import generate_heat_data, generate_burgers_data
 
-from .lorentz import LorentzEmbedding
-from .conservation import ConservationLoss
-
-__all__ = ["LorentzEmbedding", "ConservationLoss"]
+__all__ = ["generate_heat_data", "generate_burgers_data"]

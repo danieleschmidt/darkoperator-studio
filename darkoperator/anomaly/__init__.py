@@ -1,11 +1,3 @@
-"""Anomaly detection modules for dark matter searches."""
+from darkoperator.anomaly.conformal_detector import ConformalAnomalyDetector
 
-from .conformal import ConformalDetector
-from .multimodal import MultiModalAnomalyDetector
-from .base import AnomalyDetector
-
-__all__ = [
-    "ConformalDetector",
-    "MultiModalAnomalyDetector", 
-    "AnomalyDetector",
-]
+__all__ = ["ConformalAnomalyDetector"]
